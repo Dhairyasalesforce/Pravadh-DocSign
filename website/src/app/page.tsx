@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { HomeScene } from "@/components/motion/home-scene";
 import { ProductLockup } from "@/components/product-lockup";
 
 export const metadata: Metadata = {
-  title: { absolute: "Pravadh DocSign — Document generation & eSignature for Salesforce" },
-  description: "Document generation & eSignature, built natively for Salesforce. Free and open source, no paid tier.",
+  title: { absolute: "Free Open-Source eSignature for Salesforce | Pravadh DocSign" },
+  description: "Pravadh DocSign is free, open-source (Apache 2.0) document generation and eSignature built natively for Salesforce. Unlimited users, documents, recipients and signatures.",
+  ...pageMeta("/", "Free Open-Source eSignature for Salesforce | Pravadh DocSign", "Pravadh DocSign is free, open-source (Apache 2.0) document generation and eSignature built natively for Salesforce. Unlimited users, documents, recipients and signatures."),
 };
 
 export default function HomePage() {

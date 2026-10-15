@@ -12,10 +12,14 @@ This product includes third-party software:
 
 * PDF.js 4.10.38, Copyright Mozilla Foundation, Apache License 2.0
   (bundled in pravadh-docsign/main/default/staticresources/DocSignPdfEngine.resource)
-* Tiptap 2.27.2, Copyright the Tiptap authors, MIT License
+* Tiptap 2.27.2, Copyright (c) 2025 Tiptap GmbH, MIT License
   (bundled in pravadh-docsign/main/default/staticresources/DocSignTemplateEditor.resource)
 * ProseMirror, Copyright Marijn Haverbeke and others, MIT License
   (bundled in pravadh-docsign/main/default/staticresources/DocSignTemplateEditor.resource)
+* Inter, Poppins and JetBrains Mono typefaces, Copyright their project authors,
+  SIL Open Font License 1.1 (bundled in website/public/fonts)
+
+Full licence texts for these components are in THIRD_PARTY_NOTICES.md.
 
 Salesforce, Agentforce, AppExchange and related marks are trademarks of
 Salesforce, Inc. Pravadh DocSign is not affiliated with or endorsed by Salesforce.

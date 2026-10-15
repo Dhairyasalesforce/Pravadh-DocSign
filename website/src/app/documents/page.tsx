@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { DocumentScene } from "@/components/motion/document-scene";
 import { ProductLockup } from "@/components/product-lockup";
 
 export const metadata: Metadata = {
-  title: "Documents",
-  description: "Upload a PDF, detect blanks, and prepare who fills what.",
+  title: "Upload a PDF and prepare it for signing",
+  description: "Upload any PDF to Salesforce, auto-detect blanks and assign who fills what. Free, open-source eSignature with Pravadh DocSign.",
+  ...pageMeta("/documents/", "Upload a PDF and prepare it for signing", "Upload any PDF to Salesforce, auto-detect blanks and assign who fills what. Free, open-source eSignature with Pravadh DocSign."),
 };
 
 export default function DocumentsPage() {

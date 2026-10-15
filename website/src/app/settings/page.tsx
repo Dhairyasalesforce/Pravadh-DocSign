@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { SettingsScene } from "@/components/motion/settings-scene";
 import { ProductLockup } from "@/components/product-lockup";
 
 export const metadata: Metadata = {
   title: "Settings",
-  description: "Signing site, sender, expiry, reminders, branding, and AI status.",
+  description: "Signing site, sender, expiry, reminders, branding and AI status for Pravadh DocSign in Salesforce.",
+  ...pageMeta("/settings/", "Settings", "Signing site, sender, expiry, reminders, branding and AI status for Pravadh DocSign in Salesforce."),
 };
 
 export default function SettingsPage() {
