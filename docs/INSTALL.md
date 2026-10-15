@@ -26,6 +26,17 @@ sf package install --package 04tdN000000StZRQA0 --target-org <alias> --wait 20 -
 
 `AdminsOnly` installs for administrators only; you then grant access with the permission sets below. Use `AllUsers` only if you want every profile to get access straight away.
 
+<a id="install-notice"></a>
+### Install notice
+
+From version 1.1.0 the managed package runs a post-install script, `DocSignInstallHandler`. Each time the package is installed or upgraded, it sends **one email to inquire@pravadhlabs.com** containing:
+
+* the installing user: first name, last name, email, phone, title, company, address and username;
+* the org: name, org Id, edition (and whether it is a sandbox), phone, address and instance;
+* whether it was a new install or an upgrade, and the previous version.
+
+Pravadh Labs uses this only to welcome new installs and offer onboarding and support. The script reads nothing else, writes no records, makes no callouts, and cannot make an install fail. Your documents, templates and records are never sent. The email goes through your org's own email service, so in an org whose deliverability is set to "System email only" (the default in new sandboxes) it is not sent. Source deploys never send it. The code is in [`DocSignInstallHandler.cls`](../pravadh-docsign/main/default/classes/DocSignInstallHandler.cls).
+
 ### Upgrading
 
 Install the newer version over the old one with the same link or command. Templates, documents, envelopes and audit history are kept. Orgs on 0.1.0 can upgrade straight to 1.0.0.

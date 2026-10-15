@@ -13,7 +13,7 @@ type PageKey =
 
 const copy: Record<PageKey, { pill: string; title: string; accent: string; lead: string }> = {
   home: {
-    pill: "Free on AppExchange · Built natively for Salesforce",
+    pill: "Free and open source on GitHub · Built natively for Salesforce",
     title: "Any Object. Any Document.",
     accent: "Any Signature.",
     lead: "Pravadh DocSign is document generation and eSignature that lives inside Salesforce. Generate. Sign. Store. Automate. No licence to sign and no paid tier.",
@@ -46,7 +46,7 @@ const copy: Record<PageKey, { pill: string; title: string; accent: string; lead:
     pill: "Installation",
     title: "Install free",
     accent: "in 30 seconds.",
-    lead: "A free managed package, namespace prvd, separate from Pravadh IQ.",
+    lead: "Open source under Apache 2.0. Install the managed package (namespace prvd) in one click, or deploy the source from GitHub.",
   },
   pricing: {
     pill: "Pricing",
@@ -62,7 +62,7 @@ const copy: Record<PageKey, { pill: string; title: string; accent: string; lead:
   },
 };
 
-const heroChecks = ["Free managed package", "No licence to sign", "Unlimited signatures", "New: visual template editor"];
+const heroChecks = ["Free and open source", "No licence to sign", "Unlimited signatures", "New: visual template editor"];
 
 const heroStats = [
   ["Any", "Standard or custom object"],

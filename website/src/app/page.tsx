@@ -4,7 +4,7 @@ import { ProductLockup } from "@/components/product-lockup";
 
 export const metadata: Metadata = {
   title: { absolute: "Pravadh DocSign — Document generation & eSignature for Salesforce" },
-  description: "Document generation & eSignature, built natively for Salesforce. Free managed package, no paid tier.",
+  description: "Document generation & eSignature, built natively for Salesforce. Free and open source, no paid tier.",
 };
 
 export default function HomePage() {

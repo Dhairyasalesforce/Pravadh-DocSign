@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { InstallFreeLink } from "@/components/action-links";
 import { BrandLockup } from "@/components/brand-mark";
-import { appNav, labsUrl, secondaryNav } from "@/lib/nav";
+import { appNav, labsUrl, secondaryNav, githubUrl } from "@/lib/nav";
 
 const allNav = [...appNav, ...secondaryNav];
 
@@ -21,10 +21,10 @@ export function SiteHeader() {
     <>
       <div className="bg-[linear-gradient(90deg,#06122b,#0b2a63)] text-[#dbe8ff]">
         <p className="mx-auto max-w-7xl px-4 py-2 text-center text-xs sm:px-6 sm:text-[13px]">
-          <span className="font-semibold text-white">Free managed package</span>
+          <span className="font-semibold text-white">Free and open source</span>
           <span className="hidden sm:inline"> · Unlimited users, documents, recipients and signatures · No paid tier.</span>{" "}
-          <a href={labsUrl} className="font-semibold text-[#7dd3fc] hover:underline">
-            Install free →
+          <a href={githubUrl} className="font-semibold text-[#7dd3fc] hover:underline">
+            Get it on GitHub →
           </a>
         </p>
       </div>
