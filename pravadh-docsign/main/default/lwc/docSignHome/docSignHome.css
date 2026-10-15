@@ -1,0 +1,41 @@
+:host { display: block; }
+.ds-shell { position: relative; padding: 1rem; background: #f4f6f9; min-height: 100%; }
+.ds-hero { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; padding: 1.5rem; border-radius: 0.75rem; color: #fff; background: linear-gradient(120deg, #0b2447 0%, #0b5cab 60%, #1b96ff 100%); margin-bottom: 1rem; }
+.ds-hero-brand { display: flex; gap: 1rem; align-items: center; }
+.ds-hero-logo { width: 64px; height: 64px; flex: none; filter: drop-shadow(0 4px 10px rgba(0,0,0,.25)); }
+.ds-eyebrow { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; }
+.ds-title { font-size: 1.5rem; font-weight: 700; margin: 0.25rem 0; }
+.ds-sub { opacity: 0.9; max-width: 44rem; }
+.ds-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
+.ds-metric { background: #fff; border: 1px solid #dde3ea; border-radius: 0.75rem; padding: 1rem; }
+.ds-metric-value { font-size: 1.75rem; font-weight: 700; margin-top: 0.5rem; color: #1b1f24; }
+.ds-metric-label { color: #5c6670; font-size: 0.8125rem; }
+.ds-metric-completed .ds-metric-value { color: #1a7f37; }
+.ds-metric-awaiting .ds-metric-value { color: #0b5cab; }
+.ds-metric-declined .ds-metric-value, .ds-metric-expired .ds-metric-value { color: #b3261e; }
+.ds-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); gap: 1rem; }
+@media (max-width: 1024px) { .ds-grid { grid-template-columns: 1fr; } }
+.ds-card { background: #fff; border: 1px solid #dde3ea; border-radius: 0.75rem; padding: 1rem; }
+.ds-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+.ds-card-head h2 { font-size: 1rem; font-weight: 700; }
+.ds-row { cursor: pointer; }
+.ds-empty { text-align: center; padding: 2rem 1rem; color: #5c6670; }
+.ds-empty p { margin-top: 0.5rem; }
+.ds-muted { color: #5c6670; font-size: 0.8125rem; }
+.ds-progress { height: 6px; background: #eef1f5; border-radius: 3px; overflow: hidden; margin-bottom: 0.75rem; }
+.ds-progress-bar { height: 100%; background: #0b5cab; }
+.ds-steps { margin: 0; padding: 0; list-style: none; }
+.ds-step { display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.5rem 0; border-bottom: 1px solid #eef1f5; }
+.ds-step-label { font-weight: 600; }
+.ds-done .ds-step-label { color: #1a7f37; text-decoration: line-through; }
+.ds-pillars { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 1rem; }
+.ds-pillars div { background: #f4f6f9; border-radius: 0.5rem; padding: 0.625rem; display: flex; flex-direction: column; }
+.ds-pillars span { color: #5c6670; font-size: 0.75rem; }
+.ds-about-wrap { margin-top: 1rem; }
+
+.ds-drafts { margin-bottom: 1rem; border-left: 4px solid #14b8a6; }
+.ds-draft-list { list-style: none; margin: 0; padding: 0; }
+.ds-draft-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.625rem 0; border-top: 1px solid #eef1f5; }
+.ds-draft-row:first-child { border-top: 0; }
+.ds-draft-main { flex: 1 1 auto; min-width: 0; }
+.ds-draft-title { font-weight: 600; }

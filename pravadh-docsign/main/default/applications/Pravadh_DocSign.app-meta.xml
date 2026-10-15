@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <brand>
+        <headerColor>#0B5CAB</headerColor>
+        <logo>PravadhDocSignLogo</logo>
+        <logoVersion>1</logoVersion>
+        <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
+    </brand>
+    <description>Pravadh DocSign - Document Generation &amp; eSignature for Salesforce. Any Object. Any Document. Any Signature.</description>
+    <formFactors>Small</formFactors>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <label>Pravadh DocSign</label>
+    <navType>Standard</navType>
+    <tabs>DocSign_Home</tabs>
+    <tabs>DocSign_Templates</tabs>
+    <tabs>DocSign_Document__c</tabs>
+    <tabs>DocSign_Envelope__c</tabs>
+    <tabs>DocSign_Settings</tabs>
+    <uiType>Lightning</uiType>
+</CustomApplication>

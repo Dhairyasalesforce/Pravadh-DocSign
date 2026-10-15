@@ -1,0 +1,11 @@
+// Library entry for the Salesforce static resource / website embed.
+export { Editor } from '@tiptap/core'
+export { default as StarterKit } from '@tiptap/starter-kit'
+export { default as Underline } from '@tiptap/extension-underline'
+export { default as TextAlign } from '@tiptap/extension-text-align'
+export { default as TableHeader } from '@tiptap/extension-table-header'
+export { default as TableCell } from '@tiptap/extension-table-cell'
+export { default as Placeholder } from '@tiptap/extension-placeholder'
+export * from './extensions.js'
+export { toTemplate, fromTemplate, pdfChecks, PDF_STYLE } from './template.js'
+export { renderPreview } from './merge.js'

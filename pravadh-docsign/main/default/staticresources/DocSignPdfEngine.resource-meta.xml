@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StaticResource xmlns="http://soap.sforce.com/2006/04/metadata">
+    <cacheControl>Private</cacheControl>
+    <contentType>application/zip</contentType>
+    <description>Pravadh DocSign PDF engine: PDF.js 4.10.38 (Apache-2.0, includes CVE-2024-4367 fix; eval disabled) with standard fonts and CMaps, plus DocSign detection and preparation editor.</description>
+</StaticResource>

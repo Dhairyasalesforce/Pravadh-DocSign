@@ -1,0 +1,6 @@
+.ds-badge { display: inline-block; padding: 0.125rem 0.5rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; line-height: 1.25rem; white-space: nowrap; }
+.ds-neutral { background: #eef1f5; color: #3e4a57; }
+.ds-info { background: #e5f0ff; color: #0b5cab; }
+.ds-warning { background: #fff4d6; color: #8a5a00; }
+.ds-success { background: #e3f6e8; color: #1a7f37; }
+.ds-error { background: #fdecea; color: #b3261e; }

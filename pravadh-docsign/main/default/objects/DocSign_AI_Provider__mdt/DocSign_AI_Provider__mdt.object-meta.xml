@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Registers Apex classes that implement DocSignIntelligence.Provider (e.g. an Agentforce / Models API add-on). The first active provider by priority that handles a request is used; the built-in provider is the fallback.</description>
+    <label>DocSign AI Provider</label>
+    <pluralLabel>DocSign AI Providers</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

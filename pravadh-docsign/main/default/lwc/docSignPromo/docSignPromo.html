@@ -1,0 +1,28 @@
+<template>
+    <template if:true={showPromo}>
+        <aside class={cardClass} role="complementary" aria-label="More from Pravadh Labs" onmouseenter={pause} onmouseleave={resume}>
+            <div class="ds-top">
+                <span class="ds-from">From Pravadh Labs</span>
+                <button class="ds-close" title="Close" aria-label="Close" onclick={close}>
+                    <lightning-icon icon-name="utility:close" size="xx-small" variant="inverse"></lightning-icon>
+                </button>
+            </div>
+            <div class="ds-main">
+                <div class="ds-mark">{product.mark}</div>
+                <div class="ds-copy">
+                    <div class="ds-eyebrow">{product.eyebrow}</div>
+                    <div class="ds-headline">{product.headline}</div>
+                    <p class="ds-body">{product.body}</p>
+                </div>
+            </div>
+            <div class="ds-foot">
+                <div class="ds-dots">
+                    <template for:each={dots} for:item="d">
+                        <button key={d.key} class={d.cls} data-index={d.index} aria-label={d.label} title={d.label} onclick={pick}></button>
+                    </template>
+                </div>
+                <a class="ds-cta" href={href} target="_blank" rel="noopener noreferrer">{product.cta} &#8599;</a>
+            </div>
+        </aside>
+    </template>
+</template>

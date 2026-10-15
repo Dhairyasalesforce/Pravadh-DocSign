@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Pravadh DocSign Template Manager</masterLabel>
+    <description>Create, edit, preview, clone and activate document templates for any object.</description>
+    <targets>
+        <target>lightning__AppPage</target>
+        <target>lightning__Tab</target>
+    </targets>
+</LightningComponentBundle>

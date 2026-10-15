@@ -1,0 +1,28 @@
+# Salesforce
+.sf/
+.sfdx/
+.localdevserver/
+deploy-options.json
+**/lwc/jsconfig.json
+.pmdCache
+# Node / build
+node_modules/
+coverage/
+dist/
+.eslintcache
+*.log
+# Website build output
+website/.next/
+website/out/
+website/tsconfig.tsbuildinfo
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+# Secrets: never commit these
+.env
+.env.*
+*.key
+*.pem
+authUrl*.txt

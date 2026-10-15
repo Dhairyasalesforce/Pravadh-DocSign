@@ -1,0 +1,33 @@
+{
+  "packageDirectories": [
+    {
+      "versionName": "DocSign 1.1",
+      "versionNumber": "1.1.0.NEXT",
+      "path": "pravadh-docsign",
+      "default": true,
+      "package": "Pravadh DocSign",
+      "versionDescription": "Open-source document generation & eSignature for Salesforce.",
+      "ancestorVersion": "HIGHEST"
+    }
+  ],
+  "name": "Pravadh DocSign",
+  "namespace": "prvd",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "67.0",
+  "packageAliases": {
+    "Pravadh DocSign": "0HodN0000000W1VSAU",
+    "Pravadh DocSign@0.1.0-1": "04tdN000000SHtxQAG",
+    "Pravadh DocSign@0.1.0-2": "04tdN000000SHvZQAW",
+    "Pravadh DocSign@0.2.0-1": "04tdN000000SI5FQAW",
+    "Pravadh DocSign@0.3.0-1": "04tdN000000SI8TQAW",
+    "Pravadh DocSign@0.4.0-1": "04tdN000000SJvlQAG",
+    "Pravadh DocSign@0.5.0-1": "04tdN000000SJyzQAG",
+    "Pravadh DocSign@0.6.0-1": "04tdN000000SK73QAG",
+    "Pravadh DocSign@0.7.0-1": "04tdN000000SK8fQAG",
+    "Pravadh DocSign@0.8.0-1": "04tdN000000SKBtQAO",
+    "Pravadh DocSign@0.9.0-1": "04tdN000000SKevQAG",
+    "Pravadh DocSign@0.10.0-1": "04tdN000000SKrpQAG",
+    "Pravadh DocSign@0.11.0-1": "04tdN000000SNo5QAG",
+    "Pravadh DocSign@1.0.0-1": "04tdN000000StZRQA0"
+  }
+}

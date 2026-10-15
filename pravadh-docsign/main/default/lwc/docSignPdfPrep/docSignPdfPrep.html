@@ -1,0 +1,11 @@
+<template>
+    <section role="dialog" tabindex="-1" aria-modal="true" aria-label={title} class="slds-modal slds-fade-in-open slds-modal_full">
+        <div class="slds-modal__container ds-container">
+            <lightning-button-icon icon-name="utility:close" alternative-text="Close" variant="bare" size="large" class="slds-modal__close slds-button slds-button_icon" onclick={close}></lightning-button-icon>
+            <div class="slds-modal__content ds-content">
+                <iframe class="ds-frame" src={frameSrc} title={title}></iframe>
+            </div>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

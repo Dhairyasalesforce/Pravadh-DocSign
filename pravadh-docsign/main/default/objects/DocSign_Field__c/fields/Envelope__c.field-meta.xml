@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Envelope__c</fullName>
+    <label>Envelope</label><referenceTo>DocSign_Envelope__c</referenceTo><relationshipLabel>Fields</relationshipLabel><relationshipName>Fields</relationshipName><relationshipOrder>0</relationshipOrder><reparentableMasterDetail>false</reparentableMasterDetail><type>MasterDetail</type><writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

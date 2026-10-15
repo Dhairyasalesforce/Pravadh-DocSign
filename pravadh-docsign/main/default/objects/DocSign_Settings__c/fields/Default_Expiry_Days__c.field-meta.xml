@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Default_Expiry_Days__c</fullName>
+    <defaultValue>30</defaultValue><label>Default Expiry (Days)</label><precision>4</precision><scale>0</scale><type>Number</type>
+</CustomField>

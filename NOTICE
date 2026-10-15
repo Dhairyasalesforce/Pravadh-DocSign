@@ -1,0 +1,21 @@
+Pravadh DocSign
+Copyright 2026 Pravadh Labs Private Limited (https://pravadhlabs.com)
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+"Pravadh", "Pravadh Labs" and "Pravadh DocSign" and the Pravadh DocSign logos are
+trademarks of Pravadh Labs Private Limited. The Apache License does not grant
+permission to use these names or logos except as required to describe the origin
+of the work. See TRADEMARKS.md.
+
+This product includes third-party software:
+
+* PDF.js 4.10.38, Copyright Mozilla Foundation, Apache License 2.0
+  (bundled in pravadh-docsign/main/default/staticresources/DocSignPdfEngine.resource)
+* Tiptap 2.27.2, Copyright the Tiptap authors, MIT License
+  (bundled in pravadh-docsign/main/default/staticresources/DocSignTemplateEditor.resource)
+* ProseMirror, Copyright Marijn Haverbeke and others, MIT License
+  (bundled in pravadh-docsign/main/default/staticresources/DocSignTemplateEditor.resource)
+
+Salesforce, Agentforce, AppExchange and related marks are trademarks of
+Salesforce, Inc. Pravadh DocSign is not affiliated with or endorsed by Salesforce.

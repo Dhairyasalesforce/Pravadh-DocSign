@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Signing_Site_Url__c</fullName>
+    <inlineHelpText>Base URL of the Salesforce Site that hosts the public signing page, e.g. https://acme.my.salesforce-sites.com/sign</inlineHelpText><label>Signing Site URL</label><length>255</length><type>Text</type>
+</CustomField>
