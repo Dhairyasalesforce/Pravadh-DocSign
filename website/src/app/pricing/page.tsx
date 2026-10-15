@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { InstallFreeLink, ReplacingLink } from "@/components/action-links";
 import { ProductLockup } from "@/components/product-lockup";
 import { labsUrl } from "@/lib/nav";
 
 export const metadata: Metadata = {
-  title: "Pricing",
-  description: "Pravadh DocSign is free and open source. Services are unpriced.",
+  title: "Pricing: free and open source",
+  description: "Pravadh DocSign is free and open source under Apache 2.0. No per-user, per-envelope or per-signature fees, and no paid tier.",
+  ...pageMeta("/pricing/", "Pricing: free and open source", "Pravadh DocSign is free and open source under Apache 2.0. No per-user, per-envelope or per-signature fees, and no paid tier."),
 };
 
 const included = [

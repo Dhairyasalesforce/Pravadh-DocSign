@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { InstallFreeLink, ReplacingLink } from "@/components/action-links";
 import { ProductLockup } from "@/components/product-lockup";
 
 export const metadata: Metadata = {
-  title: "Installation",
-  description: "Pravadh DocSign is free and open source. Install the managed package or deploy the source from GitHub.",
+  title: "Install Pravadh DocSign (free, open source)",
+  description: "Install Pravadh DocSign free: the managed package or the Apache 2.0 source from GitHub. Step-by-step setup for document generation and eSignature in Salesforce.",
+  ...pageMeta("/installation/", "Install Pravadh DocSign (free, open source)", "Install Pravadh DocSign free: the managed package or the Apache 2.0 source from GitHub. Step-by-step setup for document generation and eSignature in Salesforce."),
 };
 
 export default function InstallationPage() {

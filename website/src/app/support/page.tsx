@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { ProductLockup } from "@/components/product-lockup";
 import { labsUrl } from "@/lib/nav";
 
 export const metadata: Metadata = {
   title: "Support",
-  description: "Get help with Pravadh DocSign from Pravadh Labs.",
+  description: "Get help with Pravadh DocSign, the free open-source eSignature and document generation app for Salesforce.",
+  ...pageMeta("/support/", "Support", "Get help with Pravadh DocSign, the free open-source eSignature and document generation app for Salesforce."),
 };
 
 const ways = [
