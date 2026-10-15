@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ReviewLink } from "@/components/action-links";
+import { GitHubLink } from "@/components/action-links";
 import { PartnerLockup } from "@/components/partner-lockup";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 
@@ -59,7 +59,7 @@ export function SettingsScene() {
       <div className="mt-10 space-y-3 text-sm leading-relaxed text-[#33425f]">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
           <PartnerLockup />
-          <ReviewLink />
+          <GitHubLink />
         </div>
         <p>Pravadh Labs is a Salesforce ISV Partner.</p>
         <p className="font-bold text-[#0b1b3a]">100% free.</p>

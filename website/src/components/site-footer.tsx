@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { InstallFreeLink, ReviewLink } from "@/components/action-links";
+import { InstallFreeLink, GitHubLink } from "@/components/action-links";
 import { BrandLockup } from "@/components/brand-mark";
 import { PartnerLockup } from "@/components/partner-lockup";
 import { appNav, labsUrl, linkedInUrl, pravadhIqUrl, secondaryNav } from "@/lib/nav";
@@ -13,11 +13,11 @@ export function SiteFooter() {
             <BrandLockup tone="dark" />
             <p className="mt-5 max-w-sm text-sm leading-relaxed">
               Document generation &amp; eSignature, built natively for Salesforce. S-Docs, Conga, and Nintex are
-              paid. The whole DocSign core is free: unlimited users, documents, recipients, and signatures.
+              paid. DocSign is free and open source: unlimited users, documents, recipients, and signatures.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <PartnerLockup tone="dark" />
-              <ReviewLink tone="dark" />
+              <GitHubLink tone="dark" />
             </div>
           </div>
           <div>

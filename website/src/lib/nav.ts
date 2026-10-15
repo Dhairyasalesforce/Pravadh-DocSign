@@ -13,5 +13,7 @@ export const secondaryNav = [
 ] as const;
 
 export const labsUrl = "https://pravadhlabs.com";
+export const githubUrl = "https://github.com/Dhairyasalesforce/Pravadh-DocSign";
+export const installUrl = `${githubUrl}#install`;
 export const linkedInUrl = "https://www.linkedin.com/in/dhairyasf/";
 export const pravadhIqUrl = "https://pravadhiq.pravadhlabs.com/";

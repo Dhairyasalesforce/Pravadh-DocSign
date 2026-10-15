@@ -5,7 +5,7 @@ import { labsUrl } from "@/lib/nav";
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: "The Pravadh DocSign managed package is free. Services are unpriced.",
+  description: "Pravadh DocSign is free and open source. Services are unpriced.",
 };
 
 const included = [
@@ -21,6 +21,7 @@ const included = [
   "SHA-256 audit chain",
   "Flow",
   "Agentforce when available",
+  "Source on GitHub (Apache 2.0)",
 ];
 
 const services = [
@@ -37,7 +38,7 @@ export default function PricingPage() {
       <div className="mt-12 grid items-start gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.85fr)]">
         <section className="rounded-2xl bg-white p-6 ring-1 ring-[#2563eb] sm:p-8">
           <p className="eyebrow">
-            Managed package
+            Open source
           </p>
           <h2 className="mt-3 text-6xl font-bold tracking-[-0.04em] text-[#0b1b3a]">Free</h2>
           <p className="mt-3 text-[#5a6a86]">No caps. There is no paid tier.</p>

@@ -32,7 +32,7 @@ const flowActions = [
 const recordActions = ["Generate", "Upload", "Prepare", "Send", "Track"];
 
 const compare = [
-  ["The product", "Paid", "Free managed package"],
+  ["The product", "Paid", "Free and open source"],
   ["Signing", "Outside Salesforce", "A Salesforce Site page"],
   ["Document tools", "S-Docs, Conga, and Nintex", "Generate and eSign, one app"],
 ] as const;

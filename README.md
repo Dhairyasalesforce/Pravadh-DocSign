@@ -43,7 +43,7 @@ Built by [Pravadh Labs](https://pravadhlabs.com).
 | **Automate** | Flow actions: Generate Document, Send for Signature, Get Signature Status, Resend Envelope, Cancel Envelope. Platform events for follow-up processing. |
 | **Agentforce-ready** | Agent actions (find templates, check missing data, signature summary, generate, send) that run as the user with sharing, CRUD and FLS. Built only on GA platform features. |
 
-No external callouts. No CDN scripts. No telemetry. See [docs/security-review](docs/security-review) for the full AppExchange security-review evidence.
+No external callouts and no CDN scripts. Your documents and records never leave your org. See [docs/security-review](docs/security-review) for the full security-review evidence.
 
 <a id="install"></a>
 ## Install
@@ -58,6 +58,8 @@ Upgradeable, namespaced (`prvd`), installs in about a minute.
 |---|---|---|---|
 | **1.0.0** (`04tdN000000StZRQA0`) | **Current release** | [Install](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdN000000StZRQA0) | [Install](https://test.salesforce.com/packaging/installPackage.apexp?p0=04tdN000000StZRQA0) |
 | 0.1.0 (`04tdN000000SHvZQAW`) | Previous release | [Install](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdN000000SHvZQAW) | [Install](https://test.salesforce.com/packaging/installPackage.apexp?p0=04tdN000000SHvZQAW) |
+
+> **Install notice.** From version 1.1.0, when the managed package is installed or upgraded it sends one email to Pravadh Labs (inquire@pravadhlabs.com) with the installing user's name, email, phone, title, company and address, and the org's name, Id, edition and address. We use it only to offer onboarding and support, and Pravadh Labs receives nothing else from your org. Source deploys (Option B) send nothing. Details: [docs/INSTALL.md](docs/INSTALL.md#install-notice).
 
 Or with the Salesforce CLI:
 

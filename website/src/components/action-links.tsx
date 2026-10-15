@@ -1,4 +1,4 @@
-import { labsUrl } from "@/lib/nav";
+import { githubUrl, installUrl, labsUrl } from "@/lib/nav";
 
 type Tone = "dark" | "light";
 
@@ -13,14 +13,14 @@ function Arrow() {
 export function InstallFreeLink({
   className = "",
   size = "lg",
-  label = "Install free in 30 seconds",
+  label = "Install free from GitHub",
 }: {
   className?: string;
   size?: "sm" | "lg";
   label?: string;
 }) {
   return (
-    <a href={labsUrl} className={`btn-pv group ${size === "sm" ? "btn-sm" : ""} ${className}`}>
+    <a href={installUrl} className={`btn-pv group ${size === "sm" ? "btn-sm" : ""} ${className}`}>
       {label}
     </a>
   );
@@ -34,15 +34,15 @@ export function ReplacingLink({ className = "", tone = "light" }: { className?: 
   );
 }
 
-export function ReviewLink({ className = "", tone = "light" }: { className?: string; tone?: Tone }) {
+export function GitHubLink({ className = "", tone = "light" }: { className?: string; tone?: Tone }) {
   return (
     <a
-      href={labsUrl}
+      href={githubUrl}
       className={`text-sm font-semibold underline-offset-4 hover:underline ${
         tone === "dark" ? "text-[#7dd3fc]" : "text-[#2563eb]"
       } ${className}`}
     >
-      Review on AppExchange →
+      Star Pravadh DocSign on GitHub →
     </a>
   );
 }

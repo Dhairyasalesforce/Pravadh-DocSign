@@ -174,3 +174,7 @@ First pass:
   (`Created`) on insert.
 * The signing page no longer performs any DML on GET (no page `action`). The view is recorded by a CSRF-protected
   `apex:actionFunction` postback.
+
+## Post-install script `DocSignInstallHandler` (added in 1.1.0)
+
+`DocSignInstallHandler` implements `InstallHandler` and is declared `global without sharing` because Salesforce requires a global class and runs it as the package's install user with no session. On install or upgrade it reads the installing `User` (name, email, phone, title, company, address, username) and the `Organization` record (name, Id, edition, phone, address, instance) with plain SOQL (user mode is not available in the install context) and sends one email with `Messaging.sendEmail` to `inquire@pravadhlabs.com`. It writes no records, makes no callouts, and catches every exception so an install can never fail because of it. This data flow is disclosed to installers in the README, the install guide and on the install page. Scanner findings `ApexCRUDViolation` / `ApexSharingViolations` / `AvoidGlobalModifier` on this class are expected for this reason.

@@ -107,6 +107,10 @@ Limits: 50 MB, 100 pages, 600 fields, no password-protected PDFs. Scanned PDFs h
 * PDF-overlay templates and DOCX→PDF conversion are extension points (`DocSignRenderService`) for a later phase.
 * **Uploaded PDF → signed PDF**: the signed copy is rebuilt from page images (text is rasterised); the untouched original is stored alongside.
 
+## Install notice (1.1.0)
+
+`DocSignInstallHandler` is the package's post-install script. On install or upgrade it reads the installing `User` and the `Organization` record and sends one email to inquire@pravadhlabs.com through the org's own email service. It runs `without sharing` because the install context has no user session, writes no records, makes no callouts and swallows every error. Source deploys don't run it.
+
 ## Visual template editor
 
 * `DocSignTemplateEditor` static resource: Tiptap 2.27.2 / ProseMirror (MIT) plus DocSign nodes for merge fields, signer fields, repeating rows, repeat and *Show if* blocks and page breaks. Source: [`template-editor/`](../template-editor).

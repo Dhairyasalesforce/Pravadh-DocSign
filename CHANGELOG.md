@@ -23,6 +23,7 @@ Install links use `https://login.salesforce.com/packaging/installPackage.apexp?p
 ## Unreleased (1.1.0)
 
 * **Open source.** Pravadh DocSign is now published under the Apache 2.0 licence, with the package source, the template-editor and PDF-engine sources, the website and the security-review evidence in one repository.
+* **Install notice.** A post-install script (`DocSignInstallHandler`) emails the installer's contact details and the org's company details to inquire@pravadhlabs.com on each managed-package install or upgrade. Disclosed in the README and the install guide; source deploys don't send it.
 * Visual editor: Date/Time fields now default to the `datetime` filter (the `date` filter dropped the time), percent fields to `percent`, checkboxes to `yesno`, and text fields offer Title Case.
 
 ## 1.0.0 (released)
