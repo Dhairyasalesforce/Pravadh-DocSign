@@ -1,0 +1,147 @@
+<apex:page controller="DocSignPdfPrepController" showHeader="false" sidebar="false" standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" cache="false">
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Prepare PDF</title>
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #eef1f5; color: #1b1f24; font: 13px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+.ds-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; background: linear-gradient(120deg, #0b2447, #0b5cab); color: #fff; }
+.ds-brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.ds-brand img { width: 28px; height: 28px; }
+.ds-brand .t { font-weight: 700; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-brand .s { font-size: 11px; opacity: .8; }
+.ds-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.ds-actions select { border-radius: 6px; border: 0; padding: 6px 8px; font: inherit; }
+.ds-btn { border: 0; border-radius: 6px; padding: 7px 12px; font: 600 13px inherit; cursor: pointer; background: #fff; color: #0b2447; }
+.ds-btn.ds-primary { background: #14b8a6; color: #fff; }
+.ds-btn.ds-ghost { background: rgba(255,255,255,.15); color: #fff; }
+.ds-btn.ds-danger { background: #fdecea; color: #b3261e; margin-top: 10px; }
+.ds-btn[disabled] { opacity: .5; cursor: not-allowed; }
+.ds-status { padding: 8px 16px; background: #fff; border-bottom: 1px solid #dde3ea; min-height: 34px; }
+.ds-status.ds-ok { color: #1a7f37; } .ds-status.ds-error { color: #b3261e; background: #fdecea; } .ds-status.ds-warn { color: #8a5a00; background: #fff8e1; } .ds-status.ds-info { color: #0b5cab; background: #eef5ff; }
+.ds-main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; height: calc(100% - 152px); }
+#ds-pages { overflow: auto; padding: 20px; }
+.ds-page { position: relative; margin: 0 auto 20px; background: #fff; box-shadow: 0 2px 10px rgba(16,24,40,.15); user-select: none; }
+.ds-page img { width: 100%; height: 100%; display: block; }
+.ds-pnum { position: absolute; right: 8px; bottom: -18px; font-size: 11px; color: #5c6670; }
+.ds-placing .ds-page { cursor: crosshair; outline: 2px dashed #14b8a6; }
+.ds-box { position: absolute; border: 1.5px solid; border-radius: 3px; cursor: move; transition: opacity .15s; }
+.ds-box.ds-dim { opacity: .18; }
+.ds-btag { position: absolute; left: -1.5px; top: -15px; max-width: 160px; padding: 0 5px; border-radius: 3px 3px 3px 0; color: #fff; font-size: 9px; font-weight: 700; line-height: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
+.ds-btag-you { display: none; }
+.ds-box:hover .ds-btag-you, .ds-box.ds-sel .ds-btag-you { display: block; }
+.ds-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px 16px; background: #f7f9fb; border-bottom: 1px solid #dde3ea; font-size: 12px; }
+.ds-legend-title { font-weight: 700; color: #5c6670; margin-right: 2px; }
+.ds-lchip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #c9d1da; background: #fff; border-radius: 999px; padding: 3px 10px; font: 600 12px inherit; color: #1b1f24; cursor: pointer; }
+.ds-lchip.ds-on { border-color: #0b5cab; background: #eef5ff; color: #0b5cab; }
+.ds-ldot { width: 10px; height: 10px; border-radius: 50%; }
+.ds-box.ds-sel { box-shadow: 0 0 0 3px rgba(20,184,166,.45); z-index: 2; }
+.ds-blabel { position: absolute; left: 3px; right: 3px; top: 50%; transform: translateY(-50%); font-size: 10px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
+.ds-resize { position: absolute; right: 0; bottom: 0; width: 10px; height: 10px; cursor: nwse-resize; background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,.35) 50%); }
+.ds-side { background: #fff; border-left: 1px solid #dde3ea; overflow: auto; padding: 14px; }
+.ds-h { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #5c6670; margin: 14px 0 8px; display: flex; justify-content: space-between; align-items: center; }
+.ds-h:first-child { margin-top: 0; }
+.ds-role { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.ds-role input { flex: 1; padding: 6px 8px; border: 1px solid #c9d1da; border-radius: 6px; font: inherit; }
+.ds-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.ds-rnum { font-weight: 700; width: 14px; }
+.ds-link { background: none; border: 0; color: #0b5cab; font: 600 12px inherit; cursor: pointer; padding: 0; }
+.ds-group { font-weight: 700; margin: 12px 0 6px; padding-left: 8px; border-left: 3px solid; }
+.ds-item { border: 1px solid #e5e9ef; border-radius: 8px; padding: 7px 9px; margin-bottom: 6px; cursor: pointer; }
+.ds-item.ds-sel { border-color: #14b8a6; background: #f0fdfa; }
+.ds-item-top { display: flex; justify-content: space-between; gap: 8px; }
+.ds-item-label { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ds-item-meta { color: #8a949e; font-size: 11px; white-space: nowrap; }
+.ds-item input[type=text] { width: 100%; margin-top: 6px; padding: 6px 8px; border: 1px solid #c9d1da; border-radius: 6px; font: inherit; }
+.ds-chip { margin-top: 6px; border: 1px dashed #14b8a6; background: #f0fdfa; color: #0f766e; border-radius: 999px; padding: 3px 9px; font: 12px inherit; cursor: pointer; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ds-cb { display: block; margin-top: 6px; }
+.ds-edbox { background: #f7f9fb; border: 1px solid #e5e9ef; border-radius: 8px; padding: 10px; }
+.ds-ed-title { font-weight: 700; margin-bottom: 8px; }
+.ds-row { display: grid; grid-template-columns: 92px 1fr; gap: 8px; align-items: center; margin-bottom: 8px; }
+.ds-row select, .ds-row input[type=text] { width: 100%; padding: 6px 8px; border: 1px solid #c9d1da; border-radius: 6px; font: inherit; }
+.ds-muted { color: #5c6670; }
+#ds-picker { display: none; margin: 40px auto; max-width: 520px; background: #fff; border-radius: 12px; padding: 24px; text-align: center; box-shadow: 0 2px 10px rgba(16,24,40,.12); }
+#ds-done { display: none; position: fixed; inset: 0; background: rgba(15,23,42,.45); align-items: center; justify-content: center; }
+#ds-done .card { background: #fff; border-radius: 12px; padding: 24px 28px; text-align: center; max-width: 420px; }
+.ds-progress { display: none; position: relative; height: 26px; margin: 0; background: #e6edf5; border-bottom: 1px solid #dde3ea; overflow: hidden; }
+.ds-progress-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: linear-gradient(90deg, #14b8a6, #0b5cab); transition: width .25s ease; }
+.ds-progress.ds-indeterminate .ds-progress-bar { animation: ds-slide 1.2s ease-in-out infinite; }
+@keyframes ds-slide { 0% { left: -35%; } 100% { left: 100%; } }
+.ds-progress-label { position: relative; z-index: 1; display: block; padding: 4px 16px; font-size: 12px; font-weight: 600; color: #0b2447; text-shadow: 0 0 3px rgba(255,255,255,.8); }
+body.ds-busy .ds-actions button, body.ds-busy .ds-actions select { pointer-events: none; opacity: .6; }
+.ds-draft { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: rgba(255,255,255,.15); font-size: 11px; }
+.ds-draft:empty { display: none; }
+.ds-draft.ds-draft-ok { background: rgba(20,184,166,.35); }
+.ds-draft.ds-draft-error { background: #b3261e; }
+.ds-hint { margin-top: 5px; font-size: 11px; color: #5c6670; }
+.ds-bubble { position: fixed; left: 20px; bottom: 20px; width: 320px; max-width: calc(100% - 40px); background: #0b2447; color: #fff; border-radius: 12px; padding: 12px 14px; box-shadow: 0 10px 30px rgba(11,36,71,.35); z-index: 20; opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity .25s ease, transform .25s ease; }
+.ds-bubble.ds-show { opacity: 1; transform: none; pointer-events: auto; }
+.ds-bubble-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.ds-bubble-kind { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #5eead4; }
+.ds-bubble-x { background: none; border: 0; color: #fff; font-size: 18px; line-height: 1; cursor: pointer; opacity: .8; }
+.ds-bubble-text { font-size: 13px; line-height: 1.4; }
+.ds-bubble-actions { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
+.ds-bubble-actions .ds-link { color: #bfdbfe; }
+@media (max-width: 900px) { .ds-main { grid-template-columns: 1fr; height: auto; } .ds-side { border-left: 0; border-top: 1px solid #dde3ea; } }
+</style>
+</head>
+<body>
+<div class="ds-top">
+  <div class="ds-brand">
+    <img src="{!URLFOR($Resource.DocSignLogo)}" alt=""/>
+    <div><div class="t" id="ds-title">Prepare PDF</div><div class="s">Pravadh DocSign · Prepare for signature <span class="ds-draft" id="ds-draft"></span></div></div>
+  </div>
+  <div class="ds-actions">
+    <select id="ds-new-type" aria-label="Field type"></select>
+    <select id="ds-new-role" aria-label="Completed by"></select>
+    <button type="button" class="ds-btn" id="ds-add">+ Add field</button>
+    <button type="button" class="ds-btn ds-ghost" id="ds-undo" title="Undo (Ctrl+Z / &#8984;Z)" disabled="disabled">&#8630; Undo</button>
+    <button type="button" class="ds-btn ds-ghost" id="ds-redo" title="Redo (Ctrl+Shift+Z)" disabled="disabled">&#8631; Redo</button>
+    <button type="button" class="ds-btn ds-ghost" id="ds-cancel">Close</button>
+    <button type="button" class="ds-btn ds-primary" id="ds-save" disabled="disabled">Save &amp; continue</button>
+  </div>
+</div>
+<div class="ds-status" id="ds-status" role="status" aria-live="polite">Loading…</div>
+<div class="ds-progress" id="ds-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"><div class="ds-progress-bar" id="ds-progress-bar"></div><span class="ds-progress-label" id="ds-progress-label"></span></div>
+<div class="ds-legend" id="ds-legend"></div>
+<div class="ds-main">
+  <div id="ds-pages">
+    <div id="ds-picker">
+      <h2 style="margin-top:0">Choose the PDF</h2>
+      <p class="ds-muted">For security, your browser couldn't load the uploaded file directly. Select the same PDF from your computer to continue. It's only read locally.</p>
+      <input type="file" id="ds-file" accept="application/pdf,.pdf"/>
+    </div>
+  </div>
+  <div class="ds-side">
+    <div class="ds-h"><span>Signers</span><span><button type="button" class="ds-link" id="ds-redetect" title="Run automatic detection again">Re-detect</button> · <button type="button" class="ds-link" id="ds-add-signer">+ Add signer</button></span></div>
+    <div id="ds-roles"></div>
+    <div class="ds-h">Field</div>
+    <div class="ds-edbox" id="ds-editor"></div>
+    <div class="ds-h"><span>All fields</span><span id="ds-count"></span></div>
+    <div id="ds-list"></div>
+  </div>
+</div>
+<div id="ds-bubble" class="ds-bubble" role="status" aria-live="polite">
+  <div class="ds-bubble-head"><span class="ds-bubble-kind" id="ds-bubble-kind">Tip</span><button type="button" class="ds-bubble-x" id="ds-bubble-close" aria-label="Hide tips">&#215;</button></div>
+  <div class="ds-bubble-text" id="ds-bubble-text"></div>
+  <div class="ds-bubble-actions"><button type="button" class="ds-btn ds-primary" id="ds-bubble-go"></button><button type="button" class="ds-link" id="ds-bubble-more">Another tip</button></div>
+</div>
+<div id="ds-done"><div class="card"><h2 style="margin-top:0">Ready to send</h2><p class="ds-muted">Your PDF is prepared. Continue in Salesforce to add signers and send it.</p></div></div>
+<script src="{!URLFOR($Resource.DocSignPdfEngine, 'pdf.bundle.js')}"></script>
+<script src="{!URLFOR($Resource.DocSignPdfEngine, 'docsign-detect.js')}"></script>
+<script src="{!URLFOR($Resource.DocSignPdfEngine, 'docsign-prep-ui.js')}"></script>
+<script>
+  DocSignPrepUI.init({
+    documentId: "{!JSENCODE(documentId)}",
+    parentOrigin: "{!JSENCODE(parentOrigin)}",
+    nonce: "{!JSENCODE(nonce)}",
+    sid: "{!JSENCODE($Api.Session_ID)}",
+    apiVersion: "67.0",
+    assetBase: "{!JSENCODE(URLFOR($Resource.DocSignPdfEngine))}/"
+  });
+</script>
+</body>
+</html>
+</apex:page>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Finalize_Requested__c</fullName>
+    <description>When a user session last asked for the signed PDF to be produced (retry of a pending finalization).</description>
+    <label>Finalize Requested</label><required>false</required><type>DateTime</type>
+</CustomField>

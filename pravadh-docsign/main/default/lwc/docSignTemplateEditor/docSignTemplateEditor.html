@@ -1,0 +1,8 @@
+<template>
+    <template lwc:if={frameSrc}>
+        <iframe class="ds-frame" src={frameSrc} title="Visual template editor"></iframe>
+    </template>
+    <template lwc:else>
+        <div class="ds-loading">Loading the visual editor…</div>
+    </template>
+</template>

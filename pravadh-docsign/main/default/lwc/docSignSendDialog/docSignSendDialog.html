@@ -1,0 +1,70 @@
+<template>
+    <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="ds-send-title" class="slds-modal slds-fade-in-open slds-modal_medium">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <lightning-button-icon icon-name="utility:close" alternative-text="Close" variant="bare" size="large" class="slds-modal__close slds-button slds-button_icon" onclick={close}></lightning-button-icon>
+                <h1 id="ds-send-title" class="slds-modal__title slds-hyphenate">Send for signature</h1>
+                <p class="slds-m-top_x-small ds-muted">{title}</p>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium ds-body">
+                <template if:true={loading}><lightning-spinner size="small" alternative-text="Loading"></lightning-spinner></template>
+                <template if:true={error}><div class="slds-notify slds-notify_alert slds-alert_error slds-m-bottom_small" role="alert">{error}</div></template>
+                <p class="ds-note">{requirementText}</p>
+
+                <template if:true={hasSuggestions}>
+                    <div class="ds-suggest">
+                        <span class="ds-muted">Suggested from this record:</span>
+                        <template for:each={suggestions} for:item="s">
+                            <button key={s.key} class="ds-chip" data-key={s.key} onclick={useSuggestion} title={s.email}>+ {s.label}</button>
+                        </template>
+                    </div>
+                </template>
+
+                <div class="ds-order">
+                    <lightning-radio-group label="Signing order" type="button" options={orderOptions} value={signingOrder} data-field="signingOrder" onchange={handle}></lightning-radio-group>
+                    <span class="ds-muted" if:true={isSequential}>Each signer receives the document after the previous one signs.</span>
+                    <span class="ds-muted" if:false={isSequential}>All signers receive the document at the same time.</span>
+                </div>
+
+                <div class="ds-rows">
+                    <template for:each={rows} for:item="r">
+                        <div key={r.key} class="ds-rwrap">
+                        <div class="ds-rrow">
+                            <div class="ds-num" style={r.numStyle}>{r.number}</div>
+                            <lightning-input label="Full name" required value={r.name} data-key={r.key} data-field="name" data-validate="true" onchange={handleRow} max-length="80"></lightning-input>
+                            <lightning-input type="email" label="Email" required value={r.email} data-key={r.key} data-field="email" data-validate="true" onchange={handleRow}></lightning-input>
+                            <lightning-input label="Role" value={r.roleLabel} data-key={r.key} data-field="roleLabel" onchange={handleRow} placeholder="Customer, Legal…"></lightning-input>
+                            <template if:true={showCodes}>
+                                <lightning-input label="Access code" value={r.accessCode} data-key={r.key} data-field="accessCode" onchange={handleRow} max-length="20"></lightning-input>
+                            </template>
+                            <div class="ds-rm">
+                                <template if:true={r.removable}>
+                                    <lightning-button-icon icon-name="utility:delete" alternative-text="Remove signer" data-key={r.key} onclick={removeRow}></lightning-button-icon>
+                                </template>
+                            </div>
+                        </div>
+                        <template if:true={r.summary}>
+                            <div class="ds-rsum" style={r.barStyle}>Signer {r.number}: {r.summary}</div>
+                        </template>
+                        </div>
+                    </template>
+                </div>
+                <div class="ds-inline">
+                    <lightning-button label="Add signer" icon-name="utility:add" onclick={addRow}></lightning-button>
+                    <lightning-button variant="base" label={codeToggleLabel} onclick={toggleCodes}></lightning-button>
+                </div>
+
+                <div class="ds-grid2">
+                    <lightning-input label="Email subject" value={emailSubject} data-field="emailSubject" onchange={handle} max-length="255"></lightning-input>
+                    <lightning-input type="number" label="Expires in (days)" value={expiryDays} data-field="expiryDays" onchange={handle} min="1" max="365"></lightning-input>
+                </div>
+                <lightning-textarea label="Message to signers" value={emailMessage} data-field="emailMessage" onchange={handle} max-length="4000"></lightning-textarea>
+            </div>
+            <div class="slds-modal__footer">
+                <lightning-button label="Cancel" onclick={close}></lightning-button>
+                <lightning-button variant="brand" label="Send" icon-name="utility:send" onclick={submit} disabled={sending} class="slds-m-left_x-small"></lightning-button>
+            </div>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

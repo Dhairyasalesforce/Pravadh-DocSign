@@ -1,0 +1,226 @@
+<template>
+    <div class="ds-shell">
+        <template if:true={loading}><lightning-spinner alternative-text="Loading" size="small"></lightning-spinner></template>
+
+        <!-- ================= LIST ================= -->
+        <template if:true={isList}>
+            <div class="ds-head">
+                <div>
+                    <div class="ds-eyebrow">Pravadh DocSign</div>
+                    <h1 class="ds-title">Templates</h1>
+                    <p class="ds-muted">Build documents for any standard or custom object. Activate a template to make it available on that object's record pages and in Flow.</p>
+                </div>
+                <div class="ds-actions">
+                    <lightning-input type="search" variant="label-hidden" label="Search templates" placeholder="Search templates" onchange={handleFilter} class="ds-search"></lightning-input>
+                    <lightning-button variant="brand" label="New Template" icon-name="utility:add" onclick={newTemplate}></lightning-button>
+                </div>
+            </div>
+            <template if:true={error}><div class="slds-notify slds-notify_alert slds-alert_error" role="alert">{error}</div></template>
+            <div class="ds-card">
+                <template if:true={hasTemplates}>
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th scope="col">Name</th>
+                                <th scope="col">Object</th>
+                                <th scope="col">Format</th>
+                                <th scope="col">Version</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Documents</th>
+                                <th scope="col">Updated</th>
+                                <th scope="col" class="ds-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={filteredTemplates} for:item="t">
+                                <tr key={t.id}>
+                                    <td><a data-id={t.id} onclick={editTemplate}><b>{t.name}</b></a><div class="ds-muted slds-truncate">{t.description}</div></td>
+                                    <td>{t.objectLabel}</td>
+                                    <td>{t.format}</td>
+                                    <td>v{t.version}</td>
+                                    <td><c-doc-sign-status-badge status={t.statusLabel}></c-doc-sign-status-badge></td>
+                                    <td>{t.documentCount}</td>
+                                    <td>{t.updated}</td>
+                                    <td class="ds-right">
+                                        <lightning-button-group>
+                                            <lightning-button label="Edit" data-id={t.id} onclick={editTemplate}></lightning-button>
+                                            <lightning-button label={t.toggleLabel} data-id={t.id} data-action="toggle" onclick={handleRowAction}></lightning-button>
+                                            <lightning-button-icon icon-name="utility:copy" alternative-text="Clone" data-id={t.id} data-action="clone" onclick={handleRowAction}></lightning-button-icon>
+                                            <lightning-button-icon icon-name="utility:delete" alternative-text="Delete" data-id={t.id} data-action="delete" onclick={handleRowAction}></lightning-button-icon>
+                                        </lightning-button-group>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </template>
+                <template if:false={hasTemplates}>
+                    <div class="ds-empty">
+                        <lightning-icon icon-name="utility:page" size="medium"></lightning-icon>
+                        <h2>Create your first template</h2>
+                        <p class="ds-muted">Pick any object, then click fields to insert them. Start from generated starter content in one click.</p>
+                        <lightning-button variant="brand" label="New Template" onclick={newTemplate} class="slds-m-top_small"></lightning-button>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- ================= EDITOR ================= -->
+        <template if:true={isEditor}>
+            <div class="ds-head">
+                <div class="ds-head-left">
+                    <lightning-button-icon icon-name="utility:back" alternative-text="Back to templates" onclick={backToList}></lightning-button-icon>
+                    <div>
+                        <div class="ds-eyebrow">Template editor</div>
+                        <h1 class="ds-title">{editorTitle}</h1>
+                    </div>
+                </div>
+                <div class="ds-actions">
+                    <lightning-input type="toggle" label="Active" data-field="active" checked={tpl.active} onchange={handleField} message-toggle-active="" message-toggle-inactive=""></lightning-input>
+                    <lightning-button variant="brand" label="Save" icon-name="utility:save" onclick={save}></lightning-button>
+                </div>
+            </div>
+
+            <div class={editorClass}>
+                <!-- settings -->
+                <div class="ds-card ds-settings">
+                    <lightning-input label="Template name" required value={tpl.name} data-field="name" onchange={handleField} max-length="80"></lightning-input>
+                    <lightning-input type="search" label="Find object" placeholder="Filter objects" onchange={handleObjectFilter}></lightning-input>
+                    <lightning-combobox label="Object" required value={tpl.objectApiName} options={objectOptions} data-field="objectApiName" onchange={handleField} placeholder="Any standard or custom object"></lightning-combobox>
+                    <lightning-combobox label="Format" value={tpl.format} options={formatOptions} data-field="format" onchange={handleField}></lightning-combobox>
+                    <lightning-input label="Output file name" value={tpl.outputFileName} data-field="outputFileName" onchange={handleField} field-level-help={fileNameHelp}></lightning-input>
+                    <template if:true={isHtml}>
+                        <div class="ds-two">
+                            <lightning-combobox label="Page size" value={tpl.pageSize} options={pageSizeOptions} data-field="pageSize" onchange={handleField}></lightning-combobox>
+                            <lightning-combobox label="Orientation" value={tpl.orientation} options={orientationOptions} data-field="orientation" onchange={handleField}></lightning-combobox>
+                        </div>
+                    </template>
+                    <lightning-input label="Category" value={tpl.category} data-field="category" onchange={handleField}></lightning-input>
+                    <lightning-textarea label="Description" value={tpl.description} data-field="description" onchange={handleField}></lightning-textarea>
+                    <div class="ds-section">Signing defaults</div>
+                    <lightning-combobox label="Signing order" value={tpl.signingOrder} options={orderOptions} data-field="signingOrder" onchange={handleField}></lightning-combobox>
+                    <lightning-input type="number" label="Expires after (days)" value={tpl.defaultExpiryDays} data-field="defaultExpiryDays" onchange={handleField} min="1" max="365"></lightning-input>
+                    <lightning-input label="Email subject" value={tpl.emailSubject} data-field="emailSubject" onchange={handleField}></lightning-input>
+                    <lightning-textarea label="Email message" value={tpl.emailMessage} data-field="emailMessage" onchange={handleField}></lightning-textarea>
+                    <div class="ds-section">When signing completes</div>
+                    <div class="ds-two">
+                        <lightning-input label="Update field (API name)" value={tpl.onCompleteField} data-field="onCompleteField" onchange={handleField} placeholder="e.g. Status__c"></lightning-input>
+                        <lightning-input label="To value" value={tpl.onCompleteValue} data-field="onCompleteValue" onchange={handleField} placeholder="e.g. Signed"></lightning-input>
+                    </div>
+                    <template if:true={isDocx}>
+                        <div class="ds-section">Word template</div>
+                        <template if:true={hasDocxFile}><p class="ds-ok">A .docx file is attached ({tpl.templateFileId}).</p></template>
+                        <template if:true={canUpload}>
+                            <lightning-file-upload label="Upload .docx" accept={docxAccept} record-id={tpl.id} onuploadfinished={handleUpload}></lightning-file-upload>
+                        </template>
+                        <template if:false={canUpload}><p class="ds-muted">{docxSaveFirst}</p></template>
+                    </template>
+                </div>
+
+                <!-- content -->
+                <div class="ds-card ds-content">
+                    <template if:true={isHtml}>
+                        <div class="ds-toolbar">
+                            <lightning-button-group>
+                                <template for:each={partButtons} for:item="p">
+                                    <lightning-button key={p.value} label={p.label} variant={p.variant} data-part={p.value} onclick={selectPart}></lightning-button>
+                                </template>
+                            </lightning-button-group>
+                            <div>
+                                <template lwc:if={isBodyPart}>
+                                    <lightning-button-group class="slds-m-right_x-small">
+                                        <lightning-button label="Visual" icon-name="utility:edit_form" variant={visualVariant} onclick={useVisual}></lightning-button>
+                                        <lightning-button label="HTML" icon-name="utility:insert_tag_field" variant={htmlVariant} onclick={useHtml}></lightning-button>
+                                    </lightning-button-group>
+                                </template>
+                                <lightning-button label="Starter content" icon-name="utility:magicwand" onclick={insertStarter}></lightning-button>
+                                <template lwc:if={showCode}>
+                                    <lightning-button label="If / Else" icon-name="utility:rules" onclick={insertIf} class="slds-m-left_xx-small"></lightning-button>
+                                </template>
+                            </div>
+                        </div>
+                        <template lwc:if={isVisual}>
+                            <c-doc-sign-template-editor body={tpl.body} object-api-name={tpl.objectApiName} onchange={handleVisualChange}></c-doc-sign-template-editor>
+                        </template>
+                        <template lwc:else>
+                            <textarea lwc:ref="editor" class="ds-code" spellcheck="false" value={activeText} oninput={handleText} aria-label="Template source"></textarea>
+                            <div class="ds-hint">{syntaxHint}</div>
+                        </template>
+                    </template>
+                    <template if:true={isDocx}>
+                        <div class="ds-empty">
+                            <lightning-icon icon-name="doctype:word" size="large"></lightning-icon>
+                            <p>{docxHelp}</p>
+                            <p class="ds-muted">Use the field explorer on the right to copy tags. Word output is generate-only; use HTML templates for eSignature.</p>
+                        </div>
+                    </template>
+
+                    <div class="ds-section">Preview with a real record</div>
+                    <div class="ds-preview-bar">
+                        <lightning-input type="search" label="Search records" placeholder="Name or record Id" onchange={handleRecordSearch} class="ds-grow"></lightning-input>
+                        <lightning-combobox label="Record" options={recordOptions} value={previewRecordId} onchange={handleRecordPick} placeholder="Choose a record" class="ds-grow"></lightning-combobox>
+                        <lightning-button variant="brand-outline" label="Save &amp; Preview PDF" icon-name="utility:preview" onclick={runPreview} class="ds-align-end"></lightning-button>
+                    </div>
+                    <template if:true={previewLoading}><div class="ds-muted slds-m-top_small">Rendering…</div></template>
+                    <template if:true={previewStats}><div class="ds-muted slds-m-top_x-small">{previewStats}</div></template>
+                    <template if:true={hasWarnings}>
+                        <div class="ds-warn">
+                            <b>Check these merge fields</b>
+                            <ul>
+                                <template for:each={previewWarnings} for:item="w"><li key={w}>{w}</li></template>
+                            </ul>
+                        </div>
+                    </template>
+                    <p class="ds-muted slds-m-top_x-small">The preview is a real PDF rendered exactly as Generate will produce it, opened in the Salesforce file viewer.</p>
+                </div>
+
+                <!-- explorer -->
+                <div class="ds-card ds-explorer">
+                    <div class="ds-section">Field explorer</div>
+                    <template if:false={hasExplorer}><p class="ds-muted">Choose an object to browse its fields, parents and related lists.</p></template>
+                    <template if:true={hasExplorer}>
+                        <div class="ds-crumbs">
+                            <template for:each={breadcrumbs} for:item="c">
+                                <a key={c.index} data-index={c.index} onclick={crumb}>{c.text}</a>
+                            </template>
+                        </div>
+                        <template if:true={inChildLoop}>
+                            <div class="ds-loop">
+                                {loopBanner}
+                                <lightning-button label="Insert loop table" variant="brand-outline" onclick={insertLoopTable} class="slds-m-top_x-small"></lightning-button>
+                            </div>
+                        </template>
+                        <lightning-input type="search" variant="label-hidden" label="Filter fields" placeholder="Filter fields" onchange={handleExplorerFilter}></lightning-input>
+                        <template if:true={explorerLoading}><div class="ds-muted">Loading…</div></template>
+                        <ul class="ds-fields">
+                            <template for:each={explorerRows} for:item="r">
+                                <li key={r.key} data-key={r.key} onclick={pickExplorer} title={r.apiName}>
+                                    <lightning-icon icon-name={r.icon} size="xx-small"></lightning-icon>
+                                    <span class="ds-f-label">{r.label}</span>
+                                    <span class="ds-f-meta">{r.meta}</span>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+
+                    <div class="ds-section">Signature fields</div>
+                    <lightning-combobox label="Signer" value={signRole} options={roleOptions} onchange={handleRole}></lightning-combobox>
+                    <div class="ds-tags">
+                        <template for:each={signTags} for:item="s">
+                            <lightning-button key={s.value} label={s.label} icon-name={s.icon} data-type={s.value} onclick={insertSign}></lightning-button>
+                        </template>
+                    </div>
+
+                    <div class="ds-section">Built-ins</div>
+                    <div class="ds-tags">
+                        <template for:each={builtins} for:item="b">
+                            <lightning-button key={b.label} label={b.label} data-tag={b.tag} onclick={insertBuiltin}></lightning-button>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <c-doc-sign-promo></c-doc-sign-promo>
+        <c-doc-sign-tips context="templates" variant="floating"></c-doc-sign-tips>
+    </div>
+</template>

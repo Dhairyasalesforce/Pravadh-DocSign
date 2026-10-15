@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Output_File_Name__c</fullName>
+    <inlineHelpText>Supports merge fields, e.g. {{Name}} - Agreement</inlineHelpText><externalId>false</externalId><label>Output File Name</label><length>255</length><required>false</required><type>Text</type><unique>false</unique>
+</CustomField>

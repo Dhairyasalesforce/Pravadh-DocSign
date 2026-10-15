@@ -1,0 +1,8 @@
+<!doctype html><html><body><script src="pdf.bundle.js"></script><script src="docsign-detect.js"></script>
+<script>
+window.run = async function () {
+  const buf = new Uint8Array(await (await fetch('oa.pdf')).arrayBuffer());
+  const r = await DocSignDetect.analyze(buf, { assetBase: './' });
+  return { roles: r.roles, fields: r.fields.map(f => ({ p: f.page, t: f.type, r: f.role, l: f.label, x: Math.round(f.x), y: Math.round(f.y), w: Math.round(f.w) })) };
+};
+</script></body></html>

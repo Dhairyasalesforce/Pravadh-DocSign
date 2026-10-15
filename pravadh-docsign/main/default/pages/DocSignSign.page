@@ -1,0 +1,397 @@
+<apex:page controller="DocSignSigningController" showHeader="false" sidebar="false" standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" cache="false" expires="0">
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="robots" content="noindex, nofollow"/>
+<meta name="referrer" content="no-referrer"/>
+<title>Review &amp; Sign</title>
+<style>
+:root { --brand: #0B5CAB; --ink: #1b1f24; --muted: #5c6670; --line: #dde3ea; --bg: #eef1f5; --ok: #1a7f37; --warn: #b26b00; --err: #c62828; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+.top { background: var(--brand); color: #fff; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.top .co { font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 10px; } .top .logo { width: 28px; height: 28px; }
+.top .sec { font-size: 12px; opacity: .85; display: flex; align-items: center; gap: 6px; }
+.wrap { max-width: 1280px; margin: 0 auto; padding: 20px 16px 40px; }
+.card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 24px; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+.center { max-width: 520px; margin: 48px auto; text-align: center; }
+.center h1 { font-size: 22px; margin: 12px 0 8px; }
+.center p { color: var(--muted); margin: 0 0 8px; }
+.icon { width: 56px; height: 56px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 28px; color: #fff; }
+.icon.ok { background: var(--ok); } .icon.err { background: var(--err); } .icon.info { background: var(--brand); }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 20px; align-items: start; }
+.doc { background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.doc-head { padding: 12px 16px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--muted); }
+.doc-head b { color: var(--ink); }
+iframe.docframe { width: 100%; height: calc(100vh - 190px); min-height: 520px; border: 0; background: #fff; display: block; }
+.panel { position: sticky; top: 16px; }
+.panel h2 { font-size: 18px; margin: 0 0 4px; }
+.muted { color: var(--muted); font-size: 13px; }
+.legend { display: grid; gap: 6px; margin: 12px 0 4px; font-size: 12px; color: #3b444d; }
+.legend span.sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 6px; }
+.nextbtn { margin-top: 8px; }
+.msg { background: #f4f6f9; border-left: 3px solid var(--brand); padding: 10px 12px; margin: 12px 0; font-size: 13px; white-space: pre-wrap; }
+.progress { height: 6px; background: #e7ebf0; border-radius: 3px; margin: 14px 0 6px; overflow: hidden; }
+.progress > div { height: 100%; background: var(--brand); width: 0; transition: width .25s; }
+.fields { list-style: none; margin: 12px 0; padding: 0; max-height: 38vh; overflow: auto; }
+.fields li { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; }
+.fields li.done { border-color: #b7dfc3; background: #f3fbf5; }
+.fields li .t { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); display: flex; justify-content: space-between; }
+.fields li .req { color: var(--err); }
+.fields input[type=text] { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; font: inherit; }
+.fields img { max-height: 40px; max-width: 100%; }
+.consent { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; margin: 14px 0; }
+.consent input { margin-top: 3px; width: 18px; height: 18px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 0; border-radius: 8px; padding: 12px 18px; font: 600 15px/1 inherit; cursor: pointer; }
+.btn.primary { background: var(--brand); color: #fff; width: 100%; }
+.btn.primary[disabled] { opacity: .5; cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--muted); padding: 10px; }
+.btn.light { background: #f1f4f8; color: var(--ink); }
+.btn.danger { background: var(--err); color: #fff; }
+.alert { background: #fdecea; color: #8a1c1c; border-radius: 8px; padding: 10px 12px; font-size: 13px; margin-bottom: 12px; }
+.modal-bg { position: fixed; inset: 0; background: rgba(15, 23, 42, .55); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 50; }
+.modal-bg.open { display: flex; }
+.modal { background: #fff; border-radius: 14px; width: 100%; max-width: 560px; padding: 22px; }
+.modal h3 { margin: 0 0 12px; font-size: 18px; }
+.tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+.tabs button { flex: 1; border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 8px; font: 600 14px inherit; cursor: pointer; }
+.tabs button.on { border-color: var(--brand); color: var(--brand); background: #f5f8ff; }
+canvas.pad { width: 100%; height: 180px; border: 1px dashed #9aa5b1; border-radius: 10px; background: #fcfcfd; touch-action: none; display: block; }
+.typed input { width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; margin-bottom: 10px; }
+.row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; flex-wrap: wrap; }
+.legal { font-size: 11px; color: var(--muted); margin-top: 10px; }
+textarea { width: 100%; min-height: 96px; border: 1px solid var(--line); border-radius: 8px; padding: 10px; font: inherit; }
+input.code { font-size: 20px; letter-spacing: .2em; text-align: center; padding: 10px; border: 1px solid var(--line); border-radius: 8px; width: 100%; margin: 12px 0; }
+.foot { text-align: center; font-size: 11px; color: var(--muted); margin-top: 24px; }
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .panel { position: static; } iframe.docframe { height: 70vh; } }
+</style>
+<script>document.documentElement.style.setProperty('--brand', "{!JSENCODE(brandColor)}");</script>
+</head>
+<body>
+<div class="top">
+  <div class="co"><img src="{!URLFOR($Resource.DocSignLogo)}" alt="" class="logo"/>{!companyName}</div>
+  <div class="sec">&#128274; Secured by Pravadh DocSign</div>
+</div>
+<div class="wrap">
+<apex:form id="f">
+
+  <!-- ERROR -->
+  <apex:outputPanel layout="block" rendered="{!state == 'error'}">
+    <div class="card center">
+      <div class="icon err">!</div>
+      <h1>This link can't be used</h1>
+      <p><apex:outputText value="{!message}"/></p>
+      <p class="muted">If you believe this is a mistake, contact the person who sent you the document.</p>
+    </div>
+  </apex:outputPanel>
+
+  <!-- ACCESS CODE -->
+  <apex:outputPanel layout="block" rendered="{!state == 'access'}">
+    <div class="card center">
+      <div class="icon info">&#128273;</div>
+      <h1>Enter your access code</h1>
+      <p><apex:outputText value="{!senderName}"/> protected <b><apex:outputText value="{!title}"/></b> with an access code. They will have shared it with you separately.</p>
+      <apex:outputPanel layout="block" styleClass="alert" rendered="{!NOT(ISBLANK(message))}"><apex:outputText value="{!message}"/></apex:outputPanel>
+      <apex:inputSecret value="{!accessCode}" styleClass="code" html-placeholder="Access code" redisplay="false"/>
+      <apex:commandButton action="{!verify}" value="Continue" styleClass="btn primary"/>
+    </div>
+  </apex:outputPanel>
+
+  <!-- DONE / ALREADY SIGNED / DECLINED -->
+  <apex:outputPanel layout="block" rendered="{!state == 'done' || state == 'signed'}">
+    <div class="card center">
+      <div class="icon ok">&#10003;</div>
+      <h1><apex:outputPanel rendered="{!state == 'done'}">You&#8217;re all set</apex:outputPanel><apex:outputPanel rendered="{!state != 'done'}">You have already signed</apex:outputPanel></h1>
+      <p>Thank you<apex:outputText value="{!IF(ISBLANK(recipientName), '', ', ' + recipientName)}"/>. Your signature on <b><apex:outputText value="{!title}"/></b> has been recorded.</p>
+      <p class="muted">When all parties have signed, you'll receive the completed document and its Certificate of Completion by email.</p>
+      <p class="muted">Envelope <apex:outputText value="{!envelopeNumber}"/></p>
+    </div>
+  </apex:outputPanel>
+  <apex:outputPanel layout="block" rendered="{!state == 'declined'}">
+    <div class="card center">
+      <div class="icon info">&#8212;</div>
+      <h1>You declined to sign</h1>
+      <p>We've let <apex:outputText value="{!senderName}"/> know. No further action is needed.</p>
+    </div>
+  </apex:outputPanel>
+
+  <!-- SIGN -->
+  <apex:outputPanel layout="block" rendered="{!state == 'sign'}">
+    <div class="layout">
+      <div class="doc">
+        <div class="doc-head"><span><b><apex:outputText value="{!title}"/></b></span><span>Envelope <apex:outputText value="{!envelopeNumber}"/></span></div>
+        <iframe id="docframe" class="docframe" sandbox="allow-same-origin" title="Document to sign"></iframe>
+      </div>
+      <div class="panel card">
+        <apex:outputPanel layout="block" styleClass="alert" rendered="{!NOT(ISBLANK(message))}"><apex:outputText value="{!message}"/></apex:outputPanel>
+        <h2>Hi <apex:outputText value="{!recipientName}"/></h2>
+        <div class="muted"><apex:outputText value="{!senderName}"/> sent you this document to review and sign.<apex:outputText value="{!IF(ISBLANK(expiresOn), '', ' Please sign by ' + expiresOn + '.')}"/></div>
+        <apex:outputPanel layout="block" styleClass="msg" rendered="{!NOT(ISBLANK(emailMessage))}"><apex:outputText value="{!emailMessage}"/></apex:outputPanel>
+        <div class="legend">
+          <div><span class="sw" style="background:#fff4c2;border:2px solid var(--brand)"></span><b>Your fields</b> are highlighted in the document.</div>
+          <apex:outputPanel layout="block" rendered="{!NOT(ISBLANK(othersText))}"><span class="sw" style="background:#eef1f5;border:1px solid #c9d1da"></span>Greyed fields are for <apex:outputText value="{!othersText}"/>. You can't change them.</apex:outputPanel>
+        </div>
+        <div class="progress"><div id="bar"></div></div>
+        <div class="muted" id="progressText"></div>
+        <button type="button" class="btn light nextbtn" id="nextField">Go to my next field &#8250;</button>
+        <ul class="fields" id="fieldList"></ul>
+        <label class="consent"><input type="checkbox" id="consent"/><span><apex:outputText value="{!consentText}"/></span></label>
+        <button type="button" class="btn primary" id="finishBtn" disabled="disabled">Finish</button>
+        <div style="text-align:center;margin-top:6px"><button type="button" class="btn ghost" id="declineOpen">Decline to sign</button></div>
+      </div>
+    </div>
+
+    <div class="modal-bg" id="sigModal" role="dialog" aria-modal="true" aria-labelledby="sigTitle">
+      <div class="modal">
+        <h3 id="sigTitle">Adopt your signature</h3>
+        <div class="tabs"><button type="button" id="tabDraw" class="on">Draw</button><button type="button" id="tabType">Type</button></div>
+        <div id="drawPane"><canvas class="pad" id="pad"></canvas><div class="muted" style="margin-top:6px">Draw with your mouse, finger or stylus.</div></div>
+        <div id="typePane" class="typed" style="display:none"><input type="text" id="typedName" maxlength="60"/><canvas class="pad" id="typedPad"></canvas></div>
+        <div class="legal">By selecting Adopt and Sign, I agree that this mark is the electronic representation of my signature or initials for all purposes when I use them on this document.</div>
+        <div class="row"><button type="button" class="btn light" id="sigClear">Clear</button><button type="button" class="btn light" id="sigCancel">Cancel</button><button type="button" class="btn primary" style="width:auto" id="sigAdopt">Adopt and Sign</button></div>
+      </div>
+    </div>
+
+    <div class="modal-bg" id="declineModal" role="dialog" aria-modal="true" aria-labelledby="decTitle">
+      <div class="modal">
+        <h3 id="decTitle">Decline to sign</h3>
+        <p class="muted">Tell <apex:outputText value="{!senderName}"/> why you're declining. The document will be voided for all signers.</p>
+        <apex:inputTextarea value="{!declineReason}" id="declineReason" html-maxlength="2000"/>
+        <div class="row"><button type="button" class="btn light" id="declineCancel">Cancel</button><apex:commandButton action="{!decline}" value="Decline" styleClass="btn danger" id="declineBtn"/></div>
+      </div>
+    </div>
+
+    <apex:actionFunction name="dsRecordView" action="{!recordView}" reRender="dsViewPing"/>
+    <apex:outputPanel id="dsViewPing"/>
+    <apex:outputPanel layout="none" rendered="{!NOT(viewLogged)}"><script>dsRecordView();</script></apex:outputPanel>
+    <apex:inputHidden value="{!payloadJson}" id="payload"/>
+    <apex:commandButton action="{!submit}" value="Submit" id="submitBtn" style="display:none"/>
+    <script>
+      var DS_DOC = "{!JSENCODE(documentHtml)}";
+      var DS_FIELDS = JSON.parse("{!JSENCODE(fieldsJson)}");
+      var DS_NAME = "{!JSENCODE(recipientName)}";
+      var DS_BRAND = "{!JSENCODE(brandColor)}";
+      var DS_TOKEN = "{!JSENCODE(jsToken)}";
+      var DS_PAGE_URL = "{!JSENCODE($Page.DocSignPageImage)}";
+    </script>
+    <script>
+    //<![CDATA[
+    (function () {
+      var state = { sig: null, ini: null, method: 'Drawn', values: {} };
+      var frame = document.getElementById('docframe');
+      var list = document.getElementById('fieldList');
+      var consent = document.getElementById('consent');
+      var finishBtn = document.getElementById('finishBtn');
+      var modalMode = 'sig';
+      var pendingField = null;
+
+      var screenCss = '<style>body{max-width:860px;margin:24px auto;padding:0 28px;} .ds-footer{display:none} .ds-header{margin-bottom:16px}' +
+        '.ds-tab{cursor:default;border-radius:4px} .ds-mine{cursor:pointer;border:2px solid ' + DS_BRAND + ';background:#fff4c2;color:#5b4500;font-weight:600;padding:4px 10px}' +
+        '.ds-mine.ds-done{background:#f3fbf5;border-color:#1a7f37;color:#1b1f24} .ds-other{opacity:.6} .ds-mine img{height:38px;vertical-align:middle}' +
+        '.ds-pdfpage{margin:0 auto 18px;background:#fff;box-shadow:0 1px 8px rgba(16,24,40,.18)} .ds-lazy{background:#f4f6f9}' +
+        '.ds-box .ds-tab{display:block;height:100%;min-width:0;padding:0 3px;font-size:10px;line-height:1.2;overflow:hidden;box-sizing:border-box;white-space:nowrap}' +
+        '.ds-box .ds-mine img{height:100%;max-height:100%}</style>';
+      if (DS_DOC.indexOf('ds-pdfpage') > -1) {
+        screenCss = screenCss.replace('body{max-width:860px;margin:24px auto;padding:0 28px;}', 'body{margin:18px auto;padding:0 12px;}');
+      }
+      var html = DS_DOC.indexOf('</head>') > -1 ? DS_DOC.replace('</head>', screenCss + '</head>') : screenCss + DS_DOC;
+      frame.srcdoc = html;
+
+      function key(f) { return String(f.index); }
+      function isAuto(f) { return f.type === 'Name' || f.type === 'Email' || f.type === 'Date Signed'; }
+      function done(f) {
+        if (isAuto(f)) return true;
+        if (f.type === 'Signature') return !!state.sig;
+        if (f.type === 'Initial') return !!state.ini;
+        if (f.type === 'Checkbox') return !f.required || state.values[key(f)] === 'true';
+        return !f.required || (state.values[key(f)] || '').trim().length > 0;
+      }
+      function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+      function label(f) { return f.label ? f.label : f.type; }
+
+      function renderList() {
+        list.innerHTML = '';
+        var complete = 0;
+        DS_FIELDS.forEach(function (f) {
+          var li = document.createElement('li');
+          var ok = done(f);
+          if (ok) complete++;
+          li.className = ok ? 'done' : '';
+          var head = '<div class="t"><span>' + esc(label(f)) + '</span>' + (f.required && !isAuto(f) ? '<span class="req">Required</span>' : '') + '</div>';
+          var body = '';
+          if (f.type === 'Signature') body = state.sig ? '<img src="' + state.sig + '" alt="Your signature"/>' : '<button type="button" class="btn light" data-act="sig">Sign</button>';
+          else if (f.type === 'Initial') body = state.ini ? '<img src="' + state.ini + '" alt="Your initials"/>' : '<button type="button" class="btn light" data-act="ini">Initial</button>';
+          else if (f.type === 'Checkbox') body = '<label><input type="checkbox" data-k="' + key(f) + '"' + (state.values[key(f)] === 'true' ? ' checked' : '') + '/> ' + esc(f.label || 'I agree') + '</label>';
+          else if (f.type === 'Text') body = '<input type="text" maxlength="255" data-k="' + key(f) + '" value="' + esc(state.values[key(f)] || '') + '" placeholder="' + esc(label(f)) + '"/>';
+          else body = '<span>' + esc(f.value) + '</span>';
+          li.innerHTML = head + body;
+          li.addEventListener('click', function (ev) { scrollToField(f); if (ev.target.getAttribute('data-act')) openModal(ev.target.getAttribute('data-act'), f); });
+          list.appendChild(li);
+        });
+        list.querySelectorAll('input[type=text]').forEach(function (inp) {
+          inp.addEventListener('input', function () { state.values[inp.getAttribute('data-k')] = inp.value; syncDoc(); updateProgress(); });
+        });
+        list.querySelectorAll('input[type=checkbox]').forEach(function (cb) {
+          cb.addEventListener('change', function () { state.values[cb.getAttribute('data-k')] = cb.checked ? 'true' : 'false'; syncDoc(); renderList(); });
+        });
+        updateProgress(complete);
+      }
+      function updateProgress(c) {
+        var complete = typeof c === 'number' ? c : DS_FIELDS.filter(done).length;
+        var total = DS_FIELDS.length || 1;
+        document.getElementById('bar').style.width = Math.round(100 * complete / total) + '%';
+        document.getElementById('progressText').textContent = complete + ' of ' + DS_FIELDS.length + ' fields completed';
+        finishBtn.disabled = !(complete === DS_FIELDS.length && consent.checked);
+      }
+      function docEl(f) { var d = frame.contentDocument; return d ? d.getElementById('dsf-' + f.index) : null; }
+      document.getElementById('nextField').addEventListener('click', function () {
+        var pending = DS_FIELDS.filter(function (f) { return !done(f); });
+        var target = pending.length ? pending[0] : DS_FIELDS[0];
+        if (!target) return;
+        scrollToField(target);
+        var el = docEl(target);
+        if (el) { el.style.outline = '3px solid ' + DS_BRAND; setTimeout(function () { el.style.outline = ''; }, 1600); }
+        if (pending.length && (target.type === 'Signature' || target.type === 'Initial')) openModal(target.type === 'Signature' ? 'sig' : 'ini', target);
+      });
+      function scrollToField(f) { var el = docEl(f); if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+      function syncDoc() {
+        DS_FIELDS.forEach(function (f) {
+          var el = docEl(f);
+          if (!el) return;
+          var v = '';
+          if (f.type === 'Signature' && state.sig) v = '<img src="' + state.sig + '" alt="Signature"/>';
+          else if (f.type === 'Initial' && state.ini) v = '<img src="' + state.ini + '" alt="Initials"/>';
+          else if (f.type === 'Checkbox') v = (state.values[key(f)] === 'true' ? '&#9745; ' : '&#9744; ') + esc(f.label || '');
+          else if (f.type === 'Text' && state.values[key(f)]) v = esc(state.values[key(f)]);
+          else if (isAuto(f)) v = esc(f.value);
+          if (v) { el.innerHTML = v; el.className = 'ds-tab ds-mine ds-done'; }
+        });
+      }
+      function loadPages() {
+        var d = frame.contentDocument;
+        if (!d) return;
+        var imgs = [].slice.call(d.querySelectorAll('img.ds-lazy'));
+        var next = function (i) {
+          if (i >= imgs.length) return;
+          var ref = imgs[i].getAttribute('data-ref') || '';
+          var url = DS_PAGE_URL + '?t=' + encodeURIComponent(DS_TOKEN) + '&v=' + encodeURIComponent(ref);
+          fetch(url, { credentials: 'same-origin', cache: 'no-store' })
+            .then(function (r) { return r.ok ? r.text() : ''; })
+            .then(function (b64) {
+              b64 = (b64 || '').trim();
+              if (b64.indexOf('/9j/') === 0 && /^[A-Za-z0-9+\/=]+$/.test(b64)) {
+                imgs[i].src = 'data:image/jpeg;base64,' + b64;
+              }
+            })
+            .catch(function () { return null; })
+            .then(function () { next(i + 1); });
+        };
+        next(0);
+      }
+      frame.addEventListener('load', loadPages);
+      frame.addEventListener('load', function () {
+        DS_FIELDS.forEach(function (f) {
+          var el = docEl(f);
+          if (!el) return;
+          el.setAttribute('role', 'button');
+          el.setAttribute('tabindex', '0');
+          el.addEventListener('click', function () {
+            if (f.type === 'Signature') { state.sig ? null : openModal('sig', f); }
+            else if (f.type === 'Initial') { state.ini ? null : openModal('ini', f); }
+            else if (f.type === 'Checkbox') { state.values[key(f)] = state.values[key(f)] === 'true' ? 'false' : 'true'; syncDoc(); renderList(); }
+            else if (f.type === 'Text') { var inp = list.querySelector('input[data-k="' + key(f) + '"]'); if (inp) inp.focus(); }
+          });
+        });
+        syncDoc();
+      });
+
+      // ---------- signature pad
+      var modal = document.getElementById('sigModal');
+      var pad = document.getElementById('pad');
+      var typedPad = document.getElementById('typedPad');
+      var typedName = document.getElementById('typedName');
+      var ctx, drawing = false, inked = false, mode = 'draw';
+      function sizeCanvas(c) { var r = c.getBoundingClientRect(); var dpr = window.devicePixelRatio || 1; c.width = Math.max(1, r.width * dpr); c.height = Math.max(1, r.height * dpr); var x = c.getContext('2d'); x.setTransform(dpr, 0, 0, dpr, 0, 0); return x; }
+      function openModal(which, f) {
+        modalMode = which; pendingField = f;
+        document.getElementById('sigTitle').textContent = which === 'ini' ? 'Adopt your initials' : 'Adopt your signature';
+        modal.classList.add('open');
+        setMode('draw');
+        typedName.value = which === 'ini' ? DS_NAME.split(/\s+/).map(function (p) { return p.charAt(0).toUpperCase(); }).join('') : DS_NAME;
+      }
+      function closeModal() { modal.classList.remove('open'); }
+      function setMode(m) {
+        mode = m;
+        document.getElementById('tabDraw').className = m === 'draw' ? 'on' : '';
+        document.getElementById('tabType').className = m === 'type' ? 'on' : '';
+        document.getElementById('drawPane').style.display = m === 'draw' ? '' : 'none';
+        document.getElementById('typePane').style.display = m === 'type' ? '' : 'none';
+        if (m === 'draw') { ctx = sizeCanvas(pad); ctx.lineWidth = 2.4; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#0b1f4d'; inked = false; }
+        else renderTyped();
+      }
+      function renderTyped() {
+        var x = sizeCanvas(typedPad); var r = typedPad.getBoundingClientRect();
+        x.clearRect(0, 0, r.width, r.height); x.fillStyle = '#0b1f4d';
+        var size = modalMode === 'ini' ? 56 : 44;
+        x.font = 'italic ' + size + 'px "Snell Roundhand", "Segoe Script", "Brush Script MT", "Lucida Handwriting", cursive';
+        x.textBaseline = 'middle'; x.textAlign = 'center';
+        x.fillText(typedName.value || '', r.width / 2, r.height / 2);
+      }
+      function pos(e) { var r = pad.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+      pad.addEventListener('pointerdown', function (e) { drawing = true; pad.setPointerCapture(e.pointerId); var p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+      pad.addEventListener('pointermove', function (e) { if (!drawing) return; var p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); inked = true; });
+      pad.addEventListener('pointerup', function () { drawing = false; });
+      pad.addEventListener('pointercancel', function () { drawing = false; });
+      typedName.addEventListener('input', renderTyped);
+      document.getElementById('tabDraw').addEventListener('click', function () { setMode('draw'); });
+      document.getElementById('tabType').addEventListener('click', function () { setMode('type'); });
+      document.getElementById('sigClear').addEventListener('click', function () { setMode(mode); });
+      document.getElementById('sigCancel').addEventListener('click', closeModal);
+      function trimmedPng(src) {
+        // Crop whitespace and downscale so the stored image stays small.
+        var w = src.width, h = src.height, d = src.getContext('2d').getImageData(0, 0, w, h).data;
+        var minX = w, minY = h, maxX = -1, maxY = -1;
+        for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) { if (d[(y * w + x) * 4 + 3] > 10) { if (x < minX) minX = x; if (y < minY) minY = y; if (x > maxX) maxX = x; if (y > maxY) maxY = y; } }
+        if (maxX < 0) return null;
+        var pad2 = 6, cw = maxX - minX + 1 + pad2 * 2, ch = maxY - minY + 1 + pad2 * 2;
+        var scale = Math.min(1, 120 / ch, 480 / cw);
+        var out = document.createElement('canvas'); out.width = Math.ceil(cw * scale); out.height = Math.ceil(ch * scale);
+        out.getContext('2d').drawImage(src, minX - pad2, minY - pad2, cw, ch, 0, 0, out.width, out.height);
+        return out.toDataURL('image/png');
+      }
+      document.getElementById('sigAdopt').addEventListener('click', function () {
+        if (mode === 'draw' && !inked) { alertInline('Please draw your ' + (modalMode === 'ini' ? 'initials' : 'signature') + '.'); return; }
+        if (mode === 'type' && !typedName.value.trim()) { alertInline('Please type your name.'); return; }
+        var png = trimmedPng(mode === 'draw' ? pad : typedPad);
+        if (!png) return;
+        if (modalMode === 'ini') state.ini = png; else { state.sig = png; state.method = mode === 'type' ? 'Typed' : 'Drawn'; }
+        closeModal(); syncDoc(); renderList();
+      });
+      function alertInline(t) { var h = document.getElementById('sigTitle'); h.textContent = t; h.style.color = '#c62828'; setTimeout(function () { h.style.color = ''; }, 1800); }
+
+      // ---------- decline
+      var dm = document.getElementById('declineModal');
+      document.getElementById('declineOpen').addEventListener('click', function () { dm.classList.add('open'); });
+      document.getElementById('declineCancel').addEventListener('click', function () { dm.classList.remove('open'); });
+
+      // ---------- finish
+      consent.addEventListener('change', function () { updateProgress(); });
+      finishBtn.addEventListener('click', function () {
+        if (finishBtn.disabled) return;
+        finishBtn.disabled = true; finishBtn.textContent = 'Submitting…';
+        var payload = { consent: consent.checked, signatureImage: state.sig, initialsImage: state.ini, signatureMethod: state.method, values: state.values };
+        document.querySelector('[id$=":payload"]').value = JSON.stringify(payload);
+        document.querySelector('[id$=":submitBtn"]').click();
+      });
+      renderList();
+    })();
+    //]]>
+    </script>
+  </apex:outputPanel>
+</apex:form>
+<div class="foot">Pravadh DocSign &#183; Any Object. Any Document. Any Signature.</div>
+</div>
+</body>
+</html>
+</apex:page>

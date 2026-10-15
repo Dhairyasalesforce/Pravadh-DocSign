@@ -1,0 +1,130 @@
+<template>
+    <article class="slds-card ds-card">
+        <div class="ds-head">
+            <div class="ds-brand">
+                <img class="ds-logo" src={logoUrl} alt="Pravadh DocSign"/>
+                <div>
+                    <div class="ds-name">{cardTitle}</div>
+                    <div class="ds-tag">Generate · Sign · Store · Automate</div>
+                </div>
+            </div>
+            <lightning-button-icon icon-name="utility:refresh" variant="bare" alternative-text="Refresh" onclick={load}></lightning-button-icon>
+        </div>
+        <div class="ds-body">
+            <template if:true={loading}><lightning-spinner size="small" alternative-text="Loading"></lightning-spinner></template>
+            <template if:true={error}><div class="slds-text-color_error">{error}</div></template>
+
+            <template if:true={ctx}>
+                <template if:true={hasTemplates}>
+                    <div class="ds-gen">
+                        <lightning-combobox class="ds-grow" label="Template" placeholder="Select a template" options={templateOptions} value={templateId} onchange={handleTemplate}></lightning-combobox>
+                        <lightning-button variant="brand" label="Generate Document" icon-name="utility:file" onclick={handleGenerate} disabled={generateDisabled}></lightning-button>
+                    </div>
+                    <template if:true={generating}><div class="ds-muted slds-m-top_x-small">Generating your document…</div></template>
+                </template>
+                <template if:false={hasTemplates}>
+                    <div class="ds-empty">
+                        <p>No active templates for <b>{ctx.objectLabel}</b> yet.</p>
+                        <p class="ds-muted">Create one in the Pravadh DocSign app → Templates, or upload an existing PDF below.</p>
+                    </div>
+                </template>
+                <template if:true={hasDrafts}>
+                    <div class="ds-resume">
+                        <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                        <div class="ds-grow ds-min0">
+                            <div class="ds-strong slds-truncate" title={resumeDoc.title}>Continue preparing: {resumeDoc.title}</div>
+                            <div class="ds-muted">{resumeText}</div>
+                        </div>
+                        <lightning-button variant="brand" label="Continue" data-action="prepare" data-id={resumeDoc.id} onclick={handleDocAction}></lightning-button>
+                    </div>
+                </template>
+                <div class="ds-upload-row">
+                    <lightning-button variant="base" label="Upload a PDF for signature" icon-name="utility:upload" onclick={toggleUpload}></lightning-button>
+                </div>
+                <template if:true={showUpload}>
+                    <div class="ds-upload">
+                        <lightning-file-upload label="Any PDF up to 100 pages: we'll find the blanks and signature lines for you" accept={pdfAccept} record-id={recordId} onuploadfinished={handleUploadFinished}></lightning-file-upload>
+                    </div>
+                </template>
+                <template if:true={openingPdf}>
+                    <div class="ds-note" role="status">
+                        <div class="ds-note-spin"><lightning-spinner size="x-small" variant="brand" alternative-text="Opening"></lightning-spinner></div>
+                        <span>Upload complete. Opening the PDF editor…</span>
+                    </div>
+                </template>
+                <template if:true={isFinishing}>
+                    <div class="ds-note" role="status">
+                        <div class="ds-note-spin"><lightning-spinner size="x-small" variant="brand" alternative-text="Working"></lightning-spinner></div>
+                        <span>All parties have signed. The signed PDF and certificate are being produced; press refresh in a minute.</span>
+                    </div>
+                </template>
+
+                <template if:true={lastResult}>
+                    <div class="ds-result">
+                        <lightning-icon icon-name="doctype:pdf" size="small"></lightning-icon>
+                        <div class="ds-grow">
+                            <div class="ds-strong">Document ready</div>
+                            <div class="ds-muted">{lastSummary}</div>
+                        </div>
+                        <lightning-button label="Preview" icon-name="utility:preview" onclick={previewLast}></lightning-button>
+                        <template if:true={lastCanSend}>
+                            <lightning-button variant="brand" label="Send for Signature" icon-name="utility:send" onclick={sendLast} class="slds-m-left_x-small"></lightning-button>
+                        </template>
+                    </div>
+                    <template if:true={hasLastWarnings}>
+                        <div class="ds-warn">
+                            <b>Some merge fields were blank or not accessible:</b>
+                            <ul>
+                                <template for:each={lastWarnings} for:item="w"><li key={w}>{w}</li></template>
+                            </ul>
+                        </div>
+                    </template>
+                </template>
+
+                <c-doc-sign-tips context="record" variant="inline"></c-doc-sign-tips>
+
+                <template if:true={hasDocuments}>
+                    <div class="ds-listhead">
+                        <span class="ds-strong">Documents ({documentCount})</span>
+                        <lightning-button variant="base" label={listToggleLabel} onclick={toggleList}></lightning-button>
+                    </div>
+                    <template if:true={showList}>
+                        <ul class="ds-docs">
+                            <template for:each={documents} for:item="d">
+                                <li key={d.id}>
+                                    <div class="ds-grow ds-min0">
+                                        <a class="ds-strong slds-truncate" data-action="open" data-id={d.id} onclick={handleDocAction} title={d.title}>{d.title}</a>
+                                        <div class="ds-muted">{d.subtitle} · {d.when}</div>
+                                    </div>
+                                    <c-doc-sign-status-badge status={d.statusToShow}></c-doc-sign-status-badge>
+                                    <template if:true={d.isDraft}>
+                                        <lightning-button label="Prepare" variant="brand-outline" data-action="prepare" data-id={d.id} onclick={handleDocAction}></lightning-button>
+                                    </template>
+                                    <lightning-button-menu alternative-text="Actions" icon-size="x-small" menu-alignment="auto" class="slds-m-left_x-small">
+                                        <lightning-menu-item label="Preview" value="preview" data-action="preview" data-file={d.contentDocumentId} onclick={handleDocAction}></lightning-menu-item>
+                                        <template if:true={d.signedDocumentId}>
+                                            <lightning-menu-item label="Preview signed copy" value="signed" data-action="signed" data-file={d.signedDocumentId} onclick={handleDocAction}></lightning-menu-item>
+                                        </template>
+                                        <template if:true={d.canPrepare}>
+                                            <lightning-menu-item label="Prepare fields" value="prepare" data-action="prepare" data-id={d.id} onclick={handleDocAction}></lightning-menu-item>
+                                        </template>
+                                        <template if:true={d.canSend}>
+                                            <lightning-menu-item label="Send for Signature" value="send" data-action="send" data-id={d.id} onclick={handleDocAction}></lightning-menu-item>
+                                        </template>
+                                        <lightning-menu-item label="Open details" value="open" data-action="open" data-id={d.id} onclick={handleDocAction}></lightning-menu-item>
+                                    </lightning-button-menu>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+                </template>
+            </template>
+        </div>
+    </article>
+    <template if:true={prep}>
+        <c-doc-sign-pdf-prep document-id={prep.documentId} prep-url={prep.prepUrl} onclose={closePrep} onprepared={handlePrepared}></c-doc-sign-pdf-prep>
+    </template>
+    <template if:true={showSend}>
+        <c-doc-sign-send-dialog document-id={sendDocumentId} onclose={closeSend} onsent={handleSent}></c-doc-sign-send-dialog>
+    </template>
+</template>

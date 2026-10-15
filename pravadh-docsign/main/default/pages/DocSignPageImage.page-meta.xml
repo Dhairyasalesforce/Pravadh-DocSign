@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <availableInTouch>false</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>Pravadh DocSign: page images for the public signing page (token-checked). Add to the same Salesforce Site as DocSign Sign.</description>
+    <label>DocSign Page Image</label>
+</ApexPage>

@@ -1,0 +1,18 @@
+<template>
+    <template if:true={visible}>
+        <div class={cls} role="status" aria-live="polite">
+            <lightning-icon icon-name="utility:light_bulb" size="x-small" class="ds-bulb"></lightning-icon>
+            <div class="ds-text">
+                <template if:true={isFloating}><div class="ds-kind">Tip</div></template>
+                <span>{tip}</span>
+            </div>
+            <div class="ds-actions">
+                <lightning-button-icon icon-name="utility:chevronright" variant="bare" size="small" alternative-text="Next tip" title="Next tip" onclick={next}></lightning-button-icon>
+                <lightning-button-icon icon-name="utility:close" variant="bare" size="small" alternative-text="Hide for now" title="Hide for now" onclick={close}></lightning-button-icon>
+            </div>
+            <template if:true={isFloating}>
+                <button class="ds-off" onclick={turnOff}>Don’t show tips</button>
+            </template>
+        </div>
+    </template>
+</template>

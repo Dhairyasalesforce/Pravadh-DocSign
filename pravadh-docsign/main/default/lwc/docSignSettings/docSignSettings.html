@@ -1,0 +1,91 @@
+<template>
+    <div class="ds-shell">
+        <template if:true={loading}><lightning-spinner size="small" alternative-text="Loading"></lightning-spinner></template>
+        <div class="ds-head">
+            <div>
+                <div class="ds-eyebrow">Pravadh DocSign</div>
+                <h1 class="ds-title">Settings</h1>
+            </div>
+            <lightning-button variant="brand" label="Save" icon-name="utility:save" onclick={save} disabled={readOnly}></lightning-button>
+        </div>
+        <template if:true={error}><div class="slds-notify slds-notify_alert slds-alert_error" role="alert">{error}</div></template>
+        <template if:true={s}>
+            <template if:true={readOnly}><div class="ds-note">You can view these settings. Changing them requires the Pravadh DocSign Admin permission set.</div></template>
+            <div class="ds-grid">
+                <div class="ds-card">
+                    <h2>External signing</h2>
+                    <p class="ds-muted">Signers don't need a Salesforce license. They sign on a public page hosted on your Salesforce Site.</p>
+                    <ol class="ds-list">
+                        <template for:each={siteSteps} for:item="st"><li key={st.key}>{st.text}</li></template>
+                    </ol>
+                    <lightning-input label="Signing Site URL" value={s.signingSiteUrl} data-field="signingSiteUrl" onchange={handle} placeholder="https://yourcompany.my.salesforce-sites.com/sign" disabled={readOnly}></lightning-input>
+                    <lightning-textarea label="E-sign consent text" value={s.consentText} data-field="consentText" onchange={handle} max-length="255" disabled={readOnly} placeholder="Default ESIGN/UETA consent text is used when blank."></lightning-textarea>
+                </div>
+                <div class="ds-card">
+                    <h2>Email &amp; branding</h2>
+                    <lightning-combobox label="Send emails from" value={s.orgWideEmailId} options={owOptions} data-field="orgWideEmailId" onchange={handle} disabled={readOnly}></lightning-combobox>
+                    <template if:true={health}>
+                        <div class={healthCls} role="status">
+                            <lightning-icon icon-name={healthIcon} size="x-small"></lightning-icon>
+                            <span>{health.message}</span>
+                        </div>
+                    </template>
+                    <div class="ds-esteps">
+                        <div class="ds-strong">Email delivery setup</div>
+                        <template for:each={emailSteps} for:item="st">
+                            <div key={st.key} class={st.cls}>
+                                <lightning-icon icon-name={st.icon} size="x-small"></lightning-icon>
+                                <div class="ds-grow">
+                                    <div class="ds-strong">{st.num}. {st.title}</div>
+                                    <div class="ds-muted">{st.text}</div>
+                                </div>
+                                <lightning-button variant="base" label={st.button} data-page={st.page} onclick={openSetup}></lightning-button>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="ds-test">
+                        <lightning-input class="ds-grow" type="email" label="Send a test email to" value={testTo} onchange={handleTestTo} disabled={readOnly}></lightning-input>
+                        <lightning-button label="Send test email" icon-name="utility:email" onclick={sendTest} disabled={testDisabled}></lightning-button>
+                    </div>
+                    <template if:true={testResult}>
+                        <div class={testCls}>{testResult.message}</div>
+                    </template>
+                    <lightning-input label="Company name" value={s.companyName} data-field="companyName" onchange={handle} disabled={readOnly}></lightning-input>
+                    <div class="ds-color">
+                        <lightning-input label="Brand color" value={s.brandColor} data-field="brandColor" onchange={handle} disabled={readOnly}></lightning-input>
+                        <span class="ds-swatch" style={swatch}></span>
+                    </div>
+                </div>
+                <div class="ds-card">
+                    <h2>Lifecycle</h2>
+                    <lightning-input type="number" label="Default expiry (days)" value={s.defaultExpiryDays} data-field="defaultExpiryDays" onchange={handle} min="1" max="365" disabled={readOnly}></lightning-input>
+                    <lightning-input type="number" label="Reminder every (days, 0 = off)" value={s.reminderIntervalDays} data-field="reminderIntervalDays" onchange={handle} min="0" max="60" disabled={readOnly}></lightning-input>
+                    <lightning-input type="toggle" label="Attach files to the source record" checked={s.linkToSourceRecord} data-field="linkToSourceRecord" onchange={handle} disabled={readOnly} message-toggle-active="" message-toggle-inactive=""></lightning-input>
+                    <lightning-input type="toggle" label="Show Pravadh Apps promotions" checked={s.showPromotions} data-field="showPromotions" onchange={handle} disabled={readOnly} message-toggle-active="" message-toggle-inactive=""></lightning-input>
+                    <div class="ds-job">
+                        <div>
+                            <div class="ds-strong">Reminders &amp; expiry job</div>
+                            <div class="ds-muted">{jobLabel}</div>
+                        </div>
+                        <lightning-button label={jobButton} onclick={toggleJob} disabled={readOnly}></lightning-button>
+                    </div>
+                </div>
+                <div class="ds-card">
+                    <h2>AI &amp; Agents</h2>
+                    <div class="ds-chips">
+                        <span class={aiAgentCls}>{aiAgentLabel}</span>
+                        <span class={aiModelsCls}>{aiModelsLabel}</span>
+                    </div>
+                    <p class="ds-muted">Intelligence provider: <b>{aiProvider}</b></p>
+                    <p class="ds-muted slds-m-top_x-small">Pravadh DocSign actions work with Agentforce (and agents running any model, including Claude) with no extra setup. In Agent Builder, add these Apex actions to a topic:</p>
+                    <ul class="ds-list">
+                        <template for:each={agentActions} for:item="a"><li key={a}>{a}</li></template>
+                    </ul>
+                    <p class="ds-muted">Every action runs as the signed-in user with their sharing and field access.</p>
+                </div>
+            </div>
+            <div class="slds-m-top_medium"><c-doc-sign-about variant="compact"></c-doc-sign-about></div>
+        </template>
+        <c-doc-sign-promo></c-doc-sign-promo>
+    </div>
+</template>

@@ -1,0 +1,15 @@
+.ds-about { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; background: #fff; border: 1px solid #dde3ea; border-radius: 0.75rem; padding: 1rem 1.25rem; }
+.ds-photo { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 3px solid #eef5ff; flex: none; }
+.ds-text { flex: 1 1 260px; min-width: 0; }
+.ds-eyebrow { font-size: 0.6875rem; letter-spacing: 0.12em; text-transform: uppercase; color: #0b5cab; font-weight: 700; }
+.ds-name { font-size: 1.0625rem; font-weight: 700; color: #1b1f24; }
+.ds-role { font-size: 0.8125rem; color: #3e4a57; }
+.ds-note { font-size: 0.8125rem; color: #5c6670; margin: 0.375rem 0 0; }
+.ds-links { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.ds-btn { font-size: 0.8125rem; font-weight: 700; padding: 0.45rem 0.85rem; border-radius: 999px; text-decoration: none; white-space: nowrap; }
+.ds-btn:hover { text-decoration: none; opacity: 0.92; }
+.ds-linkedin { background: #0a66c2; color: #fff; }
+.ds-site { background: #eef1f5; color: #0b2447; }
+.ds-compact { padding: 0.75rem 1rem; }
+.ds-compact .ds-photo { width: 48px; height: 48px; }
+.ds-compact .ds-note { display: none; }

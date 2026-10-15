@@ -1,0 +1,152 @@
+<template>
+    <article class="slds-card ds-card">
+        <template if:true={loading}><lightning-spinner size="small" alternative-text="Loading"></lightning-spinner></template>
+        <template if:true={error}><div class="slds-p-around_medium slds-text-color_error">{error}</div></template>
+        <template if:true={d}>
+            <div class="ds-top">
+                <div class="ds-grow ds-min0">
+                    <div class="ds-eyebrow">Pravadh DocSign</div>
+                    <h2 class="ds-title slds-truncate" title={d.title}>{d.title}</h2>
+                    <div class="ds-meta">
+                        <template if:true={d.documentName}><span>{d.documentName}</span></template>
+                        <template if:true={d.envelopeNumber}><span>{d.envelopeNumber}</span></template>
+                        <template if:true={d.sourceRecordId}><a data-id={d.sourceRecordId} onclick={openRecord}>{d.sourceObject} record</a></template>
+                    </div>
+                </div>
+                <div class="ds-top-right">
+                    <c-doc-sign-status-badge status={d.status}></c-doc-sign-status-badge>
+                    <template if:true={d.canPrepare}><lightning-button variant="brand" label={prepLabel} icon-name="utility:edit" onclick={openPrep}></lightning-button></template>
+                    <template if:true={d.canResend}><lightning-button label="Resend" icon-name="utility:refresh" onclick={resend} disabled={busy}></lightning-button></template>
+                    <template if:true={d.canCancel}><lightning-button label="Cancel" variant="destructive-text" icon-name="utility:ban" onclick={openCancel} disabled={busy}></lightning-button></template>
+                    <lightning-button-icon icon-name="utility:refresh" alternative-text="Refresh" onclick={load}></lightning-button-icon>
+                </div>
+            </div>
+
+            <div class="slds-p-horizontal_medium"><c-doc-sign-tips context="workspace" variant="inline"></c-doc-sign-tips></div>
+
+            <template if:false={hasEnvelope}>
+                <template if:true={d.isDraft}>
+                    <div class="ds-pad ds-muted">This uploaded PDF is still being prepared. Your work is saved automatically; click <b>Continue preparing</b> to pick up where you left off.</div>
+                </template>
+                <template if:false={d.isDraft}>
+                    <div class="ds-pad ds-muted">This document has not been sent for signature yet. Use the Pravadh DocSign component on the source record to send it.</div>
+                </template>
+            </template>
+
+            <template if:true={hasEnvelope}>
+                <div class="ds-facts">
+                    <div><span>Envelope ID</span><b class="ds-mono">{d.envelopeKey}</b></div>
+                    <div><span>Signing order</span><b>{d.signingOrder}</b></div>
+                    <div><span>Sent</span><b>{sent}</b></div>
+                    <div><span>Expires</span><b>{expires}</b></div>
+                    <template if:true={d.completedDate}><div><span>Completed</span><b>{completed}</b></div></template>
+                    <div><span>Sender</span><b>{d.sender}</b></div>
+                </div>
+                <div class={integrityCls}>
+                    <lightning-icon icon-name={integrityIcon} size="x-small"></lightning-icon>
+                    <span>{integrityLabel}</span>
+                    <template if:true={d.finalHash}><span class="ds-mono ds-muted">Signed PDF SHA-256 {d.finalHash}</span></template>
+                </div>
+
+                <div class="ds-tabs" role="tablist">
+                    <template for:each={tabs} for:item="t">
+                        <button key={t.id} role="tab" class={t.cls} data-id={t.id} onclick={selectTab}>{t.label}</button>
+                    </template>
+                </div>
+
+                <template if:true={isSigners}>
+                    <ol class="ds-signers">
+                        <template for:each={recipients} for:item="r">
+                            <li key={r.id} class={r.cls}>
+                                <div class="ds-order">{r.routingOrder}</div>
+                                <div class="ds-grow ds-min0">
+                                    <div class="ds-strong">{r.name} <span class="ds-muted">· {r.role}</span></div>
+                                    <div class="ds-muted">{r.email}<template if:true={r.hasAccessCode}> · access code</template></div>
+                                    <div class="ds-steps">
+                                        <template if:true={r.sent}><span>Sent {r.sent}</span></template>
+                                        <template if:true={r.viewed}><span>Viewed {r.viewed}</span></template>
+                                        <template if:true={r.signed}><span>Signed {r.signed}</span></template>
+                                    </div>
+                                    <template if:true={r.declineReason}><div class="ds-decline">Declined: {r.declineReason}</div></template>
+                                </div>
+                                <c-doc-sign-status-badge status={r.status}></c-doc-sign-status-badge>
+                            </li>
+                        </template>
+                    </ol>
+                </template>
+
+                <template if:true={isTimeline}>
+                    <ul class="ds-timeline">
+                        <template for:each={events} for:item="e">
+                            <li key={e.sequence}>
+                                <div class="ds-dot"><lightning-icon icon-name={e.icon} size="xx-small"></lightning-icon></div>
+                                <div class="ds-grow ds-min0">
+                                    <div><span class="ds-strong">{e.type}</span> <span class="ds-muted">#{e.sequence} · {e.when}</span></div>
+                                    <div class="ds-muted">{e.actor}<template if:true={e.actorEmail}> · {e.actorEmail}</template><template if:true={e.ip}> · IP {e.ip}</template></div>
+                                    <template if:true={e.details}><div class="ds-details">{e.details}</div></template>
+                                    <div class="ds-mono ds-hash">{e.shortHash}</div>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+            </template>
+
+            <template if:true={isFiles}>
+                <template if:true={hasFiles}>
+                    <ul class="ds-files">
+                        <template for:each={files} for:item="f">
+                            <li key={f.versionId} data-id={f.contentDocumentId} onclick={openFile}>
+                                <lightning-icon icon-name={f.icon} size="small"></lightning-icon>
+                                <div class="ds-grow"><div class="ds-strong">{f.label}</div><div class="ds-muted">{f.kind}</div></div>
+                                <lightning-icon icon-name="utility:preview" size="x-small"></lightning-icon>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+                <template if:false={hasFiles}><div class="ds-pad ds-muted">No files yet.</div></template>
+            </template>
+            <template if:false={hasEnvelope}>
+                <template if:true={hasFiles}>
+                    <ul class="ds-files">
+                        <template for:each={files} for:item="f">
+                            <li key={f.versionId} data-id={f.contentDocumentId} onclick={openFile}>
+                                <lightning-icon icon-name={f.icon} size="small"></lightning-icon>
+                                <div class="ds-grow"><div class="ds-strong">{f.label}</div><div class="ds-muted">{f.kind}</div></div>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+            </template>
+
+            <template if:true={hasMultipleEnvelopes}>
+                <div class="ds-pad">
+                    <div class="ds-eyebrow">Envelope history</div>
+                    <template for:each={envelopes} for:item="e">
+                        <div key={e.id} class="ds-hist"><a data-id={e.id} onclick={openRecord}>{e.name}</a><c-doc-sign-status-badge status={e.status}></c-doc-sign-status-badge></div>
+                    </template>
+                </div>
+            </template>
+        </template>
+    </article>
+
+    <template if:true={showCancel}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="ds-cancel-title" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header"><h1 id="ds-cancel-title" class="slds-modal__title">Cancel envelope?</h1></div>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <p class="slds-m-bottom_small">Signers are notified and their signing links stop working. Signatures already collected are kept in the audit trail.</p>
+                    <lightning-textarea label="Reason (sent to signers)" value={cancelReason} onchange={handleReason} max-length="255"></lightning-textarea>
+                </div>
+                <div class="slds-modal__footer">
+                    <lightning-button label="Keep envelope" onclick={closeCancel}></lightning-button>
+                    <lightning-button variant="destructive" label="Cancel envelope" onclick={confirmCancel} disabled={busy} class="slds-m-left_x-small"></lightning-button>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <template if:true={prep}>
+        <c-doc-sign-pdf-prep document-id={prep.documentId} prep-url={prep.prepUrl} onclose={closePrep} onprepared={handlePrepared}></c-doc-sign-pdf-prep>
+    </template>
+</template>

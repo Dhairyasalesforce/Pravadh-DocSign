@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Signing_Order__c</fullName>
+    <label>Signing Order</label><required>false</required><type>Picklist</type><valueSet><restricted>true</restricted><valueSetDefinition><sorted>false</sorted><value><fullName>Sequential</fullName><default>true</default><label>Sequential</label></value><value><fullName>Parallel</fullName><default>false</default><label>Parallel</label></value></valueSetDefinition></valueSet>
+</CustomField>

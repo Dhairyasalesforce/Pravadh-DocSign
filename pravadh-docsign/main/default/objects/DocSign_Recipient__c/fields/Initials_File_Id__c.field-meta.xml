@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Initials_File_Id__c</fullName>
+    <description>Salesforce Files version that holds this signer's image, used when rendering the signed PDF.</description>
+    <externalId>false</externalId><label>Initials File Id</label><length>18</length><required>false</required><type>Text</type><unique>false</unique>
+</CustomField>

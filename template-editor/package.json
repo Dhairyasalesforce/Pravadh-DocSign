@@ -1,0 +1,27 @@
+{
+  "name": "pravadh-docsign-template-editor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Source of the Pravadh DocSign visual template editor (DocSignTemplateEditor static resource) and the website demo.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "build:salesforce": "node build-sf.mjs",
+    "build:demo": "node build.mjs"
+  },
+  "dependencies": {
+    "@tiptap/core": "2.27.2",
+    "@tiptap/extension-placeholder": "2.27.2",
+    "@tiptap/extension-table": "2.27.2",
+    "@tiptap/extension-table-cell": "2.27.2",
+    "@tiptap/extension-table-header": "2.27.2",
+    "@tiptap/extension-table-row": "2.27.2",
+    "@tiptap/extension-text-align": "2.27.2",
+    "@tiptap/extension-underline": "2.27.2",
+    "@tiptap/pm": "2.27.2",
+    "@tiptap/starter-kit": "2.27.2"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

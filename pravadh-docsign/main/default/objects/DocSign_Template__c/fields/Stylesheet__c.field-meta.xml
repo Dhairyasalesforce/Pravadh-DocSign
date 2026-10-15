@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Stylesheet__c</fullName>
+    <label>Stylesheet</label><length>32768</length><type>LongTextArea</type><visibleLines>8</visibleLines>
+</CustomField>

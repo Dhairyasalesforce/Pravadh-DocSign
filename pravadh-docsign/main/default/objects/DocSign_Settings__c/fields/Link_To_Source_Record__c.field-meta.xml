@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Link_To_Source_Record__c</fullName>
+    <defaultValue>true</defaultValue><label>Attach Files To Source Record</label><type>Checkbox</type>
+</CustomField>

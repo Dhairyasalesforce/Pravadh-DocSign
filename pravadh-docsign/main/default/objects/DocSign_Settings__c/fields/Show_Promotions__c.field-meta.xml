@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Show_Promotions__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>Show the floating Pravadh Labs product card inside the Pravadh DocSign app.</description>
+    <label>Show Pravadh Apps Promotions</label>
+    <type>Checkbox</type>
+</CustomField>

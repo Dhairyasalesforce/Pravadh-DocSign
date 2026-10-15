@@ -1,0 +1,25 @@
+.ds-card { border-radius: 0.75rem; overflow: visible; }
+.ds-head { border-radius: 0.75rem 0.75rem 0 0; display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: linear-gradient(120deg, #0b2447, #0b5cab); color: #fff; }
+.ds-brand { display: flex; gap: 0.625rem; align-items: center; }
+.ds-logo { width: 34px; height: 34px; display: block; }
+.ds-name { font-weight: 700; }
+.ds-tag { font-size: 0.6875rem; opacity: 0.85; letter-spacing: 0.04em; }
+.ds-body { position: relative; padding: 0.75rem 1rem 1rem; min-height: 80px; }
+.ds-gen { display: flex; gap: 0.5rem; align-items: flex-end; flex-wrap: wrap; }
+.ds-grow { flex: 1 1 200px; }
+.ds-min0 { min-width: 0; }
+.ds-muted { color: #5c6670; font-size: 0.75rem; }
+.ds-strong { font-weight: 600; }
+.ds-empty { background: #f4f6f9; border-radius: 0.5rem; padding: 0.75rem; }
+.ds-result { display: flex; align-items: center; gap: 0.625rem; flex-wrap: wrap; margin-top: 0.75rem; padding: 0.625rem 0.75rem; border: 1px solid #b7dfc3; background: #f3fbf5; border-radius: 0.5rem; }
+.ds-warn { background: #fff8e1; border: 1px solid #f2d27a; border-radius: 0.5rem; padding: 0.5rem 0.75rem; margin-top: 0.5rem; font-size: 0.75rem; }
+.ds-warn ul { margin: 0.25rem 0 0 1rem; list-style: disc; }
+.ds-listhead { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; border-top: 1px solid #eef1f5; padding-top: 0.625rem; }
+.ds-docs { list-style: none; margin: 0.25rem 0 0; padding: 0; }
+.ds-docs li { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0; border-bottom: 1px solid #f3f5f8; }
+.ds-docs a { display: block; }
+.ds-upload-row { margin-top: 0.5rem; }
+.ds-upload { margin-top: 0.25rem; padding: 0.75rem; border: 1px dashed #9fc3f0; border-radius: 0.5rem; background: #f5f9ff; }
+.ds-note { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; padding: 0.5rem 0.75rem; border-radius: 0.5rem; background: #eef5ff; color: #0b5cab; font-size: 0.75rem; }
+.ds-note-spin { position: relative; width: 1.25rem; height: 1.25rem; flex: none; }
+.ds-resume { display: flex; align-items: center; gap: 0.625rem; margin-top: 0.75rem; padding: 0.625rem 0.75rem; border: 1px solid #99e0d6; background: #f0fdfa; border-radius: 0.5rem; }
